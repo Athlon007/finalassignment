@@ -18,7 +18,9 @@
    <children>
       <GridPane maxHeight="400.0" prefHeight="100.0" prefWidth="166.0" stylesheets="@styles.css">
         <columnConstraints>
-          <ColumnConstraints hgrow="NEVER" maxWidth="500.0" minWidth="10.0" prefWidth="500.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="0.0" prefWidth="10.0" />
+          <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="500.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="0.0" prefWidth="10.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="48.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -28,15 +30,15 @@
             <RowConstraints maxHeight="49.0" minHeight="20.0" prefHeight="13.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Login">
+            <Label text="Login" GridPane.columnIndex="1">
                <font>
                   <Font size="26.0" />
                </font>
             </Label>
-            <TextField promptText="Username" styleClass="textFields" stylesheets="@styles.css" GridPane.rowIndex="1" />
-            <PasswordField promptText="Password" styleClass="textFields" stylesheets="@styles.css" GridPane.rowIndex="2" />
-            <Button mnemonicParsing="false" onAction="#onLoginButtonClick" prefHeight="26.0" prefWidth="113.0" styleClass="button-main" stylesheets="@styles.css" text="Login" GridPane.rowIndex="3" />
-            <Label fx:id="lblWarning" styleClass="label-warning" GridPane.rowIndex="4" />
+            <TextField promptText="Username" styleClass="textFields" stylesheets="@styles.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <PasswordField promptText="Password" styleClass="textFields" stylesheets="@styles.css" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" onAction="#onLoginButtonClick" prefHeight="26.0" prefWidth="113.0" styleClass="button-main" stylesheets="@styles.css" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="lblWarning" styleClass="label-warning" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
       </GridPane>
    </children>
