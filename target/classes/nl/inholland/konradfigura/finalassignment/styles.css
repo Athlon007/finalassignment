@@ -1,0 +1,27 @@
+.textFields {
+    -fx-background-color: white;
+    -fx-border-style: solid;
+    -fx-border-color: #919191;
+    -fx-border-width: 2px;
+}
+
+.button {
+    -fx-background-radius: 0px;
+}
+
+.button-main {
+    -fx-background-color: #0c84e7;
+    -fx-text-fill: #fff;
+}
+
+.button-main:hover {
+    -fx-background-color: #4696e3;
+}
+
+.button-main:pressed {
+    -fx-background-color: #0d60a4;
+}
+
+.label-warning {
+    -fx-text-fill: red;
+}

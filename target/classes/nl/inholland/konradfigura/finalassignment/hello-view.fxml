@@ -1,16 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="nl.inholland.konradfigura.finalassignment.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+<VBox alignment="CENTER" prefHeight="240.0" prefWidth="401.0" spacing="20.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.inholland.konradfigura.finalassignment.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <children>
+      <GridPane prefHeight="100.0" prefWidth="166.0" stylesheets="@styles.css" VBox.vgrow="ALWAYS">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="48.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="48.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="48.0" minHeight="48.0" prefHeight="43.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="98.0" minHeight="10.0" prefHeight="77.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="49.0" minHeight="20.0" prefHeight="13.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Login">
+               <font>
+                  <Font size="26.0" />
+               </font>
+            </Label>
+            <TextField promptText="Username" styleClass="textFields" stylesheets="@styles.css" GridPane.rowIndex="1" />
+            <PasswordField promptText="Password" styleClass="textFields" stylesheets="@styles.css" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" onAction="#onLoginButtonClick" prefHeight="26.0" prefWidth="113.0" styleClass="button-main" stylesheets="@styles.css" text="Login" GridPane.rowIndex="3" />
+            <Label fx:id="lblWarning" styleClass="label-warning" GridPane.rowIndex="4" />
+         </children>
+      </GridPane>
+   </children>
 </VBox>
