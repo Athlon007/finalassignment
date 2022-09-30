@@ -24,13 +24,28 @@ public class HelloController {
         boolean valid = isPasswordValid(builder);
 
         if (!valid) {
-            lblWarning.setText(builder.toString());
+            //lblWarning.setText(builder.toString());
+            setWarningText(builder.toString());
+        }
+
+        // TODO: Show dashboard ONLY if user successfully logs in.
+        try {
+            HelloApplication.getInstance().loadView(Views.Dashboard);
+        }
+        catch (Exception exception) {
+            setWarningText("Something went wrong while loading the dashboard.");
+            exception.printStackTrace();
+            // TODO: Add error logger.
         }
     }
 
     private boolean isPasswordValid(StringBuilder failReason) {
-        // TODO: Implement it :D
+        // TODO: Implement password validation.
         failReason.append("User does not exist.");
         return false;
+    }
+
+    private void setWarningText(String text) {
+        lblWarning.setText(text);
     }
 }

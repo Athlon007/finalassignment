@@ -35,8 +35,8 @@
                   <Font size="26.0" />
                </font>
             </Label>
-            <TextField fx:id="txtUsername" promptText="Username" styleClass="textFields" stylesheets="@styles.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <PasswordField fx:id="txtPassword" promptText="Password" styleClass="textFields" stylesheets="@styles.css" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="txtUsername" promptText="Username" stylesheets="@styles.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <PasswordField fx:id="txtPassword" promptText="Password" stylesheets="@styles.css" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Button mnemonicParsing="false" onAction="#onLoginButtonClick" prefHeight="26.0" prefWidth="113.0" styleClass="button-main" stylesheets="@styles.css" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label fx:id="lblWarning" styleClass="label-warning" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
