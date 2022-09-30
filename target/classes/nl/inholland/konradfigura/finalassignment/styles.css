@@ -25,3 +25,41 @@
 .label-warning {
     -fx-text-fill: red;
 }
+
+.body-dashboard {
+    -fx-background-color: black;
+}
+
+.tab-pane {
+    -fx-background-color: #c9c9c9;
+    -fx-tab-min-height: 3em;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: black;
+}
+
+.tab {
+    -fx-background-color: #5d5e5e;
+    -fx-font-weight: bold;
+    -fx-border-width: 0px 1px 0px 1px;
+    -fx-border-color: black;
+    -fx-background-radius: 0px;
+    -fx-pref-width: 15em;
+    -fx-background-insets: 0 1 0 0, 1 2 0 1, 2 3 0 2; /* Removes the line under the tab. */
+}
+
+.tab:selected {
+    -fx-background-color: #c9c9c9;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: black;
+}
+
+.tab-label {
+    -fx-text-fill: white;
+    -fx-font-size: 1.2em;
+    -fx-pref-width: 15em;
+    -fx-text-alignment: left;
+}
