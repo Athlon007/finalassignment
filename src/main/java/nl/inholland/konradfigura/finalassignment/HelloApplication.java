@@ -2,7 +2,9 @@ package nl.inholland.konradfigura.finalassignment;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -41,5 +43,10 @@ public class HelloApplication extends Application {
         stage.setTitle("Library System");
         stage.setScene(scene);
         stage.show();
+
+        // Center the view.
+        Rectangle2D rect = Screen.getPrimary().getVisualBounds();
+        stage.setX((rect.getWidth() - stage.getWidth()) / 2);
+        stage.setY((rect.getHeight() - stage.getHeight()) / 2);
     }
 }
