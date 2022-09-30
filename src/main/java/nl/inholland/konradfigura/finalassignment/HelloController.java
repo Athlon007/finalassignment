@@ -24,7 +24,6 @@ public class HelloController {
         boolean valid = isPasswordValid(builder);
 
         if (!valid) {
-            //lblWarning.setText(builder.toString());
             setWarningText(builder.toString());
         }
 
