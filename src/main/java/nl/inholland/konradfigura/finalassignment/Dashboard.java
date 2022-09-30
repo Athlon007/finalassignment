@@ -5,6 +5,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
@@ -23,6 +24,9 @@ public class Dashboard implements Initializable {
 
     @FXML
     private Tab tabMembers;
+
+    @FXML
+    private Label lblWelcome;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

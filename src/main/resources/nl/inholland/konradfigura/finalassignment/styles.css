@@ -11,18 +11,16 @@
 
 .button {
     -fx-background-radius: 0px;
-}
-
-.button-main {
     -fx-background-color: #0c84e7;
     -fx-text-fill: #fff;
+    -fx-min-width: 113px;
+    -fx-min-height: 26px;
 }
-
-.button-main:hover {
+.button:hover {
     -fx-background-color: #4696e3;
 }
 
-.button-main:pressed {
+.button:pressed {
     -fx-background-color: #0d60a4;
 }
 
@@ -53,6 +51,10 @@
     -fx-background-insets: 0 1 0 0, 1 2 0 1, 2 3 0 2; /* Removes the line under the tab. */
 }
 
+.tab-first {
+    -fx-padding: 0px 1px 0px 0px;
+}
+
 .tab:selected {
     -fx-background-color: #c9c9c9;
 }
@@ -75,4 +77,8 @@
 .split-pane > .split-pane-divider {
     -fx-background-color: #c9c9c9;
     -fx-pref-width: 3em;
+}
+
+.header-category {
+    -fx-text-fill: #6f6f6f;
 }
