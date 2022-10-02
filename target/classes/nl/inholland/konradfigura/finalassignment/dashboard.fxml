@@ -102,6 +102,7 @@
                               <Button layoutX="125.0" layoutY="436.0" mnemonicParsing="false" onAction="#onCancelAddItemClick" styleClass="button-secondary" text="Cancel" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="125.0" />
                            </children>
                         </AnchorPane>
+                        <TextField layoutX="757.0" layoutY="12.0" prefHeight="30.0" prefWidth="307.0" promptText="Search" AnchorPane.rightAnchor="54.0" />
                      </children>
                   </AnchorPane>
             </content>
