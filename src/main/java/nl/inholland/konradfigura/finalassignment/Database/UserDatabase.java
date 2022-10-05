@@ -51,10 +51,17 @@ public class UserDatabase extends Database<User>  {
 
     @Override
     public void delete(User user) {
-        list.remove(user);
+        if (list.contains(user)) {
+            list.remove(user);
+        }
     }
 
     public void editUser(User editingUser, String firstName, String lastName, String password, LocalDate birthdate) {
+        if (list.contains(editingUser)) {
+            // TODO: Should throw an exception instead...
+            return;
+        }
+
         int index = getItemPositonWithinList(editingUser);
         editingUser.setFirstName(firstName);
         editingUser.setLastName(lastName);
