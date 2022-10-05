@@ -205,9 +205,13 @@ public class Dashboard implements Initializable, UserLoadable {
 
     @FXML
     protected void onDeleteMember(ActionEvent event) {
-        ObservableList<User> selectedPerson = tblMembers.getSelectionModel().getSelectedItems();
+        User selectedPerson = (User)tblMembers.getSelectionModel().getSelectedItem();
 
-        if (selectedPerson.get(0) == currentUser) {
+        if (selectedPerson == null) {
+            return;
+        }
+
+        if (selectedPerson == currentUser) {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle("Oops!");
             a.setHeaderText("Cannot remove self, dummy.");
@@ -215,7 +219,7 @@ public class Dashboard implements Initializable, UserLoadable {
             return;
         }
 
-        HelloApplication.getDatabase().deleteUser(selectedPerson.get(0));
+        HelloApplication.getDatabase().deleteUser(selectedPerson);
         loadTableMembers();
     }
 
