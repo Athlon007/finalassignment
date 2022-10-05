@@ -3,9 +3,7 @@ package nl.inholland.konradfigura.finalassignment.Database;
 import javafx.scene.control.Alert;
 import nl.inholland.konradfigura.finalassignment.Model.User;
 
-import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserDatabase extends Database<User>  {
