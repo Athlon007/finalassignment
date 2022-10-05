@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Database {
+    // TODO: Make an abstract version of Database object, then inherit it here.
     private final String DATABASE_FILE = "data.db";
 
     private List<User> users = new ArrayList<>();
