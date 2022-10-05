@@ -120,32 +120,15 @@
 }
 
 .table-view .column-header .label {
+    /*-fx-alignment: left;*/
     -fx-padding: 10px;
 }
 
-.date-picker-popup {
-    -fx-border-width: 2px;
-    -fx-border-color: #c9c9c9;
-    -fx-effect: null;
+.table-column {
+
 }
 
-.date-picker .arrow-button {
-    -fx-background-color: white;
-    -fx-background-radius: 0;
-    -fx-border-width: 4px;
-}
-
-.date-picker-popup > * > .spinner > .button {
-    -fx-background-color: transparent;
-    -fx-background-radius: 0;
-    -fx-pref-width: -1;
-    -fx-pref-height: -1;
-}
-
-.date-picker-popup > .month-year-pane {
-    -fx-background-color: white;
-}
-
-.date-picker-popup .month-year-pane {
-    -fx-background-color: white;
+.error-label {
+    -fx-text-fill: #be0000;
+    -fx-font-weight: bold;
 }

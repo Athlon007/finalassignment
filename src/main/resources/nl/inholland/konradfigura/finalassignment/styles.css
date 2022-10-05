@@ -120,10 +120,15 @@
 }
 
 .table-view .column-header .label {
-    -fx-alignment: left;
+    /*-fx-alignment: left;*/
     -fx-padding: 10px;
 }
 
 .table-column {
 
+}
+
+.error-label {
+    -fx-text-fill: #be0000;
+    -fx-font-weight: bold;
 }

@@ -3,18 +3,26 @@ package nl.inholland.konradfigura.finalassignment;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import nl.inholland.konradfigura.finalassignment.Model.User;
+import nl.inholland.konradfigura.finalassignment.Model.UserLoadable;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class Dashboard implements Initializable {
+public class Dashboard implements Initializable, UserLoadable {
+    @FXML
+    private AnchorPane root;
+
     @FXML
     private TabPane tabContainer;
 
@@ -42,18 +50,65 @@ public class Dashboard implements Initializable {
     @FXML
     private AnchorPane paneAddItem;
 
+    @FXML
+    private TextField txtNewMemberFirstName;
+
+    @FXML
+    private TextField txtNewMemberLastName;
+
+    @FXML
+    private DatePicker dpNewMemberBirthdate;
+
+    @FXML
+    private TableColumn tblMembersId;
+
+    @FXML
+    private TableColumn tblMembersFirstName;
+
+    @FXML
+    private TableColumn tblMembersLastName;
+
+    @FXML
+    private TableColumn tblMembersBirthdate;
+
+    private User currentUser;
+
+    @FXML
+    private Label lblErrorAddMember;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tabContainer.getSelectionModel().selectedItemProperty().addListener(
                 (observableValue, tab, t1) -> {
                     // TODO: Implement tab changing actions.
+                    if (tab == tabMembers) {
+                        paneAddMember.setVisible(false);
+                    }
                 }
         );
         tabContainer.getSelectionModel().select(tabLending);
+
+        tblMembersId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tblMembersFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        tblMembersLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        tblMembersBirthdate.setCellValueFactory(new PropertyValueFactory<>("birthdate"));
+        loadTableMembers();
+
+        lblErrorAddMember.setText("");
+    }
+
+    public void loadUser(User user) {
+        this.currentUser = user;
+        lblWelcome.setText(String.format("Welcome %s", currentUser.getFirstName()));
+    }
+
+    private void loadTableMembers() {
+        tblMembers.getItems().clear();
+        tblMembers.getItems().addAll(HelloApplication.getDatabase().getAllUsers());
     }
 
     @FXML
-    protected void onAddMemberClick(ActionEvent event) {
+    protected void onAddMemberOpenMenuClick(ActionEvent event) {
         paneAddMember.setVisible(true);
         // TODO: Clean text fields.
     }
@@ -72,6 +127,60 @@ public class Dashboard implements Initializable {
     @FXML
     protected void onCancelAddItemClick(ActionEvent event) {
         paneAddItem.setVisible(false);
+    }
+
+    @FXML
+    protected void onAddMemberClick(ActionEvent event) {
+        root.requestFocus();
+
+        lblErrorAddMember.setText("");
+        String errors = "";
+
+        String firstName = txtNewMemberFirstName.getText();
+        String lastName = txtNewMemberLastName.getText();
+
+        LocalDate birthdate = dpNewMemberBirthdate.getValue();
+
+        if (firstName.isEmpty()) {
+            errors += "First name missing\n";
+        }
+        if (lastName.isEmpty()) {
+            errors += "Last name missing\n";
+        }
+        if (birthdate == null) {
+            errors += "Birth date missing\n";
+        }
+
+        if (errors.length() > 0) {
+            lblErrorAddMember.setText(errors);
+            return;
+        }
+
+        HelloApplication.getDatabase().addUser(firstName, lastName, birthdate, "password1");
+
+        loadTableMembers();
+        paneAddMember.setVisible(false);
+    }
+
+    @FXML
+    protected void onDeleteMember(ActionEvent event) {
+        ObservableList<User> selectedPerson = tblMembers.getSelectionModel().getSelectedItems();
+
+        if (selectedPerson.get(0) == currentUser) {
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setTitle("Oops!");
+            a.setHeaderText("Cannot remove self, dummy.");
+            a.show();
+            return;
+        }
+
+        HelloApplication.getDatabase().deleteUser(selectedPerson.get(0));
+        loadTableMembers();
+    }
+
+    @FXML
+    public void stop(ActionEvent event) {
+        event.consume();
     }
 }
 

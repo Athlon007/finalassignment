@@ -6,6 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import nl.inholland.konradfigura.finalassignment.Database.Database;
+import nl.inholland.konradfigura.finalassignment.Model.User;
 
 public class HelloController {
 
@@ -20,16 +23,20 @@ public class HelloController {
 
     @FXML
     protected void onLoginButtonClick(ActionEvent event) {
-        StringBuilder builder = new StringBuilder();
-        boolean valid = isPasswordValid(builder);
+        login();
+    }
 
-        if (!valid) {
-            setWarningText(builder.toString());
+    private void login() {
+        StringBuilder builder = new StringBuilder();
+        User user = HelloApplication.getDatabase().getUser(txtUsername.getText(), txtPassword.getText());
+
+        if (user == null) {
+            setWarningText("User does not exist.");
+            return;
         }
 
-        // TODO: Show dashboard ONLY if user successfully logs in.
         try {
-            HelloApplication.getInstance().loadView(Views.Dashboard);
+            HelloApplication.loadView(Views.DASHBOARD, user);
         }
         catch (Exception exception) {
             setWarningText("Something went wrong while loading the dashboard.");
@@ -38,13 +45,14 @@ public class HelloController {
         }
     }
 
-    private boolean isPasswordValid(StringBuilder failReason) {
-        // TODO: Implement password validation.
-        failReason.append("User does not exist.");
-        return false;
-    }
-
     private void setWarningText(String text) {
         lblWarning.setText(text);
+    }
+
+    @FXML
+    private void onKeyPressed(KeyEvent e) {
+        if (e.getCode().toString().equals("ENTER")) {
+            login();
+        }
     }
 }
