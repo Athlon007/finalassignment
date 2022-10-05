@@ -21,14 +21,18 @@ public class User implements Serializable {
     public String getFirstName() {
         return firstName;
     }
+    public void setFirstName(String value) { firstName = value; }
 
     public String getLastName() { return lastName; }
+    public void setLastName(String value) { lastName = value; }
 
     public LocalDate getBirthdate() { return birthdate; }
+    public void setBirthdate(LocalDate date) { birthdate = date; }
 
     public String getPassword() {
         return password;
     }
+    public void setPassword(String value) { password = value; }
 
     public int getId() {
         return HelloApplication.getDatabase().getUserId(this);

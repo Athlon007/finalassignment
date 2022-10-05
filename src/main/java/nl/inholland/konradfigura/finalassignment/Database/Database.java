@@ -27,6 +27,11 @@ public class Database {
         //addUser("Gordon", "Freeman", LocalDate.of(1998, 11,19), "password1");
     }
 
+    /**
+     * Reads database from the DATABASE_FILE.
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     private void read() throws IOException, ClassNotFoundException {
         File f = new File(DATABASE_FILE);
         if (f.exists() && !f.isDirectory()) {
@@ -73,6 +78,10 @@ public class Database {
         users.remove(user);
     }
 
+    /**
+     * Writes the database to the DATABASE_FILE.
+     * @throws IOException
+     */
     public void write() throws IOException {
         if (!hasUsersListBeenLoaded) {
             return;
@@ -83,5 +92,14 @@ public class Database {
         obj.writeObject(users);
         obj.close();
         fos.close();
+    }
+
+    public void editUser(User editingUser, String firstName, String lastName, String password, LocalDate birthdate) {
+        int index = getUserId(editingUser) - 1;
+        editingUser.setFirstName(firstName);
+        editingUser.setLastName(lastName);
+        editingUser.setPassword(password);
+        editingUser.setBirthdate(birthdate);
+        users.set(index, editingUser);
     }
 }

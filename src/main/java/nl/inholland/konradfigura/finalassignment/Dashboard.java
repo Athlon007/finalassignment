@@ -72,9 +72,17 @@ public class Dashboard implements Initializable, UserLoadable {
     private TableColumn tblMembersBirthdate;
 
     private User currentUser;
+    private User editingUser;
+    private boolean editUserMode;
 
     @FXML
     private Label lblErrorAddMember;
+
+    @FXML
+    private PasswordField pwdNewMemberPassword;
+
+    @FXML
+    private Button btnAddMember;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -109,8 +117,32 @@ public class Dashboard implements Initializable, UserLoadable {
 
     @FXML
     protected void onAddMemberOpenMenuClick(ActionEvent event) {
+        txtNewMemberFirstName.setText("");
+        txtNewMemberLastName.setText("");
+        pwdNewMemberPassword.setText("");
+        dpNewMemberBirthdate.setValue(LocalDate.now());
+        btnAddMember.setText("Add member");
+        editUserMode = false;
+
         paneAddMember.setVisible(true);
-        // TODO: Clean text fields.
+    }
+
+    @FXML
+    protected void onEditMemberOpenMenuClick(ActionEvent event) {
+        if (tblMembers.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
+        editingUser = (User)tblMembers.getSelectionModel().getSelectedItem();
+
+        btnAddMember.setText("Edit member");
+        editUserMode = true;
+
+        txtNewMemberFirstName.setText(editingUser.getFirstName());
+        txtNewMemberLastName.setText(editingUser.getLastName());
+        pwdNewMemberPassword.setText(editingUser.getPassword());
+        dpNewMemberBirthdate.setValue(editingUser.getBirthdate());
+
+        paneAddMember.setVisible(true);
     }
 
     @FXML
@@ -138,6 +170,7 @@ public class Dashboard implements Initializable, UserLoadable {
 
         String firstName = txtNewMemberFirstName.getText();
         String lastName = txtNewMemberLastName.getText();
+        String password = pwdNewMemberPassword.getText();
 
         LocalDate birthdate = dpNewMemberBirthdate.getValue();
 
@@ -146,6 +179,9 @@ public class Dashboard implements Initializable, UserLoadable {
         }
         if (lastName.isEmpty()) {
             errors += "Last name missing\n";
+        }
+        if (password.isEmpty()) {
+            errors += "Password missing\n";
         }
         if (birthdate == null) {
             errors += "Birth date missing\n";
@@ -156,7 +192,12 @@ public class Dashboard implements Initializable, UserLoadable {
             return;
         }
 
-        HelloApplication.getDatabase().addUser(firstName, lastName, birthdate, "password1");
+        if (editUserMode) {
+            HelloApplication.getDatabase().editUser(editingUser, firstName, lastName, password, birthdate);
+        }
+        else {
+            HelloApplication.getDatabase().addUser(firstName, lastName, birthdate, "password1");
+        }
 
         loadTableMembers();
         paneAddMember.setVisible(false);
