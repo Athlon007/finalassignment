@@ -13,7 +13,9 @@ public abstract class Database<Serializable> {
 
     public abstract void add(Serializable obj);
     public abstract void delete(Serializable obj);
-    public abstract List<Serializable> getAll();
+    public List<Serializable> getAll() {
+        return list;
+    }
 
     /**
      * Reads database from the DATABASE_FILE.
@@ -58,6 +60,10 @@ public abstract class Database<Serializable> {
      */
     public abstract String getDatabaseFile();
 
+    /**
+     * Generates new item ID.
+     * @return
+     */
     protected abstract int generateId();
 
     protected int getItemPositonWithinList(Serializable obj) {

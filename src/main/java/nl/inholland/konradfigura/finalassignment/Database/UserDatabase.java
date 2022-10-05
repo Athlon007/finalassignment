@@ -45,11 +45,6 @@ public class UserDatabase extends Database<User>  {
     }
 
     @Override
-    public List<User> getAll() {
-        return list;
-    }
-
-    @Override
     public void delete(User user) {
         if (list.contains(user)) {
             list.remove(user);

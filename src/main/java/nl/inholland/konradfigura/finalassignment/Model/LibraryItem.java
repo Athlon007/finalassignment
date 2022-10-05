@@ -3,24 +3,24 @@ package nl.inholland.konradfigura.finalassignment.Model;
 import java.io.Serializable;
 
 public class LibraryItem implements Serializable {
-    private int itemID;
+    private int id;
     private boolean isAvailable;
     private String title;
     private String author;
 
-    public LibraryItem(int itemID, boolean isAvailable, String title, String author) {
-        this.itemID = itemID;
+    public LibraryItem(int id, boolean isAvailable, String title, String author) {
+        this.id = id;
         this.isAvailable = isAvailable;
         this.title = title;
         this.author = author;
     }
 
-    public int getItemID() {
-        return itemID;
+    public int getId() {
+        return id;
     }
 
-    public void setItemID(int itemID) {
-        this.itemID = itemID;
+    public void setId(int itemID) {
+        this.id = itemID;
     }
 
     public boolean isAvailable() {

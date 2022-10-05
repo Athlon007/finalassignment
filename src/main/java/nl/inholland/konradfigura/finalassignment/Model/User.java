@@ -1,7 +1,5 @@
 package nl.inholland.konradfigura.finalassignment.Model;
 
-import nl.inholland.konradfigura.finalassignment.HelloApplication;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 
