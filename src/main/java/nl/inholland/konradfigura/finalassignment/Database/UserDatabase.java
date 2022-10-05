@@ -22,7 +22,7 @@ public class UserDatabase extends Database<User>  {
             a.setHeaderText("Unable to load database file.");
         }
 
-        //addUser("Gordon", "Freeman", LocalDate.of(1998, 11,19), "password1");
+        //add("Gordon", "Freeman", LocalDate.of(1998, 11,19), "password1");
     }
 
     @Override
@@ -31,7 +31,7 @@ public class UserDatabase extends Database<User>  {
     }
 
     public void add(String firstname, String lastname, LocalDate birthdate, String password) {
-        User user = new User(firstname, lastname, birthdate, password);
+        User user = new User(generateId(), firstname, lastname, birthdate, password);
         add(user);
     }
 
@@ -50,26 +50,28 @@ public class UserDatabase extends Database<User>  {
     }
 
     @Override
-    public int getId(User user) {
-        for (int i = 0; i < list.size(); ++i) {
-            if (user == list.get(i)) {
-                return i + 1;
-            }
-        }
-        return -1;
-    }
-
-    @Override
     public void delete(User user) {
         list.remove(user);
     }
 
     public void editUser(User editingUser, String firstName, String lastName, String password, LocalDate birthdate) {
-        int index = getId(editingUser) - 1;
+        int index = getItemPositonWithinList(editingUser);
         editingUser.setFirstName(firstName);
         editingUser.setLastName(lastName);
         editingUser.setPassword(password);
         editingUser.setBirthdate(birthdate);
         list.set(index, editingUser);
+    }
+
+    @Override
+    protected int generateId() {
+        int highestId = 0;
+        for (User user : getAll()) {
+            if (user.getId() > highestId) {
+                highestId = user.getId();
+            }
+        }
+
+        return highestId + 1;
     }
 }

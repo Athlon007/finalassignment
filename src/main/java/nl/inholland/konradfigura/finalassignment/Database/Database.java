@@ -3,6 +3,7 @@ package nl.inholland.konradfigura.finalassignment.Database;
 import nl.inholland.konradfigura.finalassignment.Model.User;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Database<Serializable> {
@@ -13,7 +14,6 @@ public abstract class Database<Serializable> {
     public abstract void add(Serializable obj);
     public abstract void delete(Serializable obj);
     public abstract List<Serializable> getAll();
-    public abstract int getId(Serializable obj);
 
     /**
      * Reads database from the DATABASE_FILE.
@@ -27,6 +27,9 @@ public abstract class Database<Serializable> {
             FileInputStream fis = new FileInputStream(f);
             ObjectInputStream ois = new ObjectInputStream(fis);
             output = (List<Serializable>)ois.readObject();
+        }
+        else {
+            output = new ArrayList<>();
         }
 
         hasUsersListBeenLoaded = true;
@@ -54,4 +57,17 @@ public abstract class Database<Serializable> {
      * @return
      */
     public abstract String getDatabaseFile();
+
+    protected abstract int generateId();
+
+    protected int getItemPositonWithinList(Serializable obj) {
+        int i = 0;
+        for (Serializable entry : list) {
+            if (entry == obj) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
 }

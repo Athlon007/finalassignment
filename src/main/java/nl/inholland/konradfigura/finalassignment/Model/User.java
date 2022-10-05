@@ -6,12 +6,14 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class User implements Serializable {
+    private int id;
     private String firstName;
     private String lastName;
     private LocalDate birthdate;
     private String password;
 
-    public User(String firstName, String lastName, LocalDate birthdate, String password) {
+    public User(int id, String firstName, String lastName, LocalDate birthdate, String password) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthdate = birthdate;
@@ -35,6 +37,10 @@ public class User implements Serializable {
     public void setPassword(String value) { password = value; }
 
     public int getId() {
-        return HelloApplication.getDatabase().getId(this);
+        return id;
+    }
+
+    public void setId(int value) {
+        id = value;
     }
 }
