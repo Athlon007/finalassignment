@@ -78,6 +78,24 @@ public class Dashboard implements Initializable, UserLoadable {
     @FXML
     private Button btnAddMember;
 
+    // COLLECTION
+    @FXML
+    private TableColumn tblItemsItemCode;
+    @FXML
+    private TableColumn tblItemsAvailable;
+    @FXML
+    private TableColumn tblItemsTitle;
+    @FXML
+    private TableColumn tblItemsAuthor;
+    @FXML
+    private TextField txtAddItemTitle;
+    @FXML
+    private TextField txtAddItemAuthor;
+    @FXML
+    private Button btnAddItem;
+    @FXML
+    private Label lblErrorAddItem;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tabContainer.getSelectionModel().selectedItemProperty().addListener(
@@ -85,6 +103,9 @@ public class Dashboard implements Initializable, UserLoadable {
                     // TODO: Implement tab changing actions.
                     if (tab == tabMembers) {
                         paneAddMember.setVisible(false);
+                    }
+                    else if (tab == tabCollection) {
+                        paneAddItem.setVisible(false);
                     }
                 }
         );
@@ -95,6 +116,12 @@ public class Dashboard implements Initializable, UserLoadable {
         tblMembersLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         tblMembersBirthdate.setCellValueFactory(new PropertyValueFactory<>("birthdate"));
         loadTableMembers();
+
+        tblItemsItemCode.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tblItemsAvailable.setCellValueFactory(new PropertyValueFactory<>("availableHumanReadable"));
+        tblItemsTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        tblItemsAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
+        loadTableItems();
 
         lblErrorAddMember.setText("");
     }
@@ -109,11 +136,17 @@ public class Dashboard implements Initializable, UserLoadable {
         tblMembers.getItems().addAll(HelloApplication.getDatabase().getAll());
     }
 
+    private void loadTableItems() {
+        tblItems.getItems().clear();
+        tblItems.getItems().addAll(HelloApplication.getLibrary().getAll());
+    }
+
     @FXML
     protected void onAddMemberOpenMenuClick(ActionEvent event) {
         txtNewMemberFirstName.setText("");
         txtNewMemberLastName.setText("");
         pwdNewMemberPassword.setText("");
+        lblErrorAddItem.setText("");
         dpNewMemberBirthdate.setValue(LocalDate.now());
         btnAddMember.setText("Add member");
         editUserMode = false;
@@ -135,6 +168,7 @@ public class Dashboard implements Initializable, UserLoadable {
         txtNewMemberLastName.setText(editingUser.getLastName());
         pwdNewMemberPassword.setText(editingUser.getPassword());
         dpNewMemberBirthdate.setValue(editingUser.getBirthdate());
+        lblErrorAddItem.setText("");
 
         paneAddMember.setVisible(true);
     }
@@ -145,9 +179,11 @@ public class Dashboard implements Initializable, UserLoadable {
     }
 
     @FXML
-    protected void onAddItemClick(ActionEvent event) {
+    protected void onAddItemOpenMenuClick(ActionEvent event) {
         paneAddItem.setVisible(true);
-        // TODO: Clean text fields.
+        txtAddItemTitle.setText("");
+        txtAddItemAuthor.setText("");
+        lblErrorAddItem.setText("");
     }
 
     @FXML
@@ -215,6 +251,31 @@ public class Dashboard implements Initializable, UserLoadable {
 
         HelloApplication.getDatabase().delete(selectedPerson);
         loadTableMembers();
+    }
+
+    @FXML
+    protected void onAddItemClick(ActionEvent event) {
+        String issues = "";
+
+        String title = txtAddItemTitle.getText();
+        String author = txtAddItemAuthor.getText();
+
+        if (title.isEmpty()) {
+            issues += "Title is missing\n";
+        }
+
+        if (author.isEmpty()) {
+            issues += "Author is missing\n";
+        }
+
+        if (issues.length() > 0) {
+            return;
+        }
+
+        HelloApplication.getLibrary().add(title, author);
+
+        paneAddItem.setVisible(false);
+        loadTableItems();
     }
 }
 
