@@ -12,6 +12,7 @@ import nl.inholland.konradfigura.finalassignment.Database.UserDatabase;
 import nl.inholland.konradfigura.finalassignment.Model.User;
 import nl.inholland.konradfigura.finalassignment.Model.UserLoadable;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
@@ -55,10 +56,10 @@ public class HelloApplication extends Application {
            ((UserLoadable) fxmlLoader.getController()).loadUser(asUser);
         }
 
-        // Center the view.
-        Rectangle2D rect = Screen.getPrimary().getVisualBounds();
-        stage.setX((rect.getWidth() - stage.getWidth()) / 2);
-        stage.setY((rect.getHeight() - stage.getHeight()) / 2);
+        // Center the view to the currently active display
+        Rectangle2D rect = getActiveScreen().getVisualBounds();
+        stage.setX(rect.getMinX() + (rect.getWidth() - stage.getWidth()) / 2);
+        stage.setY(rect.getMinY() + (rect.getHeight() - stage.getHeight()) / 2);
     }
 
     public static UserDatabase getDatabase() {
@@ -74,4 +75,22 @@ public class HelloApplication extends Application {
     }
 
     public static LibraryDatabase getLibrary() { return library; }
+
+    /**
+     * Returns the screen, on which currently is mouse.
+     * @return
+     */
+    private static Screen getActiveScreen() {
+        Point mousePosition = MouseInfo.getPointerInfo().getLocation();
+        Screen current = Screen.getPrimary();
+        for (Screen screen : Screen.getScreens()) {
+            if (mousePosition.getX() > screen.getVisualBounds().getMinX()
+                    && mousePosition.getX() < screen.getVisualBounds().getMaxX()
+                    && mousePosition.getY() > screen.getVisualBounds().getMinY()
+                    && mousePosition.getY() < screen.getVisualBounds().getMaxY()) {
+                current = screen;
+            }
+        }
+        return current;
+    }
 }

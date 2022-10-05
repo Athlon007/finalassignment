@@ -22,7 +22,13 @@ public class UserDatabase extends Database<User>  {
             a.setHeaderText("Unable to load database file.");
         }
 
-        //add("Gordon", "Freeman", LocalDate.of(1998, 11,19), "password1");
+        // FOR DEBUG PURPOSES ONLY!
+        // If the database gets loaded as empty (ex. file got corrupted, a dummy account will always be created).
+        if (list.size() == 0) {
+            add("Gordon", "Freeman", LocalDate.of(1998, 11, 19), "password1");
+            User user = list.get(0);
+            System.out.println(String.format("A dummy account has been added.\nLogin: %s\nPassword: %s", user.getFirstName(), user.getPassword()));
+        }
     }
 
     @Override
@@ -52,7 +58,7 @@ public class UserDatabase extends Database<User>  {
     }
 
     public void editUser(User editingUser, String firstName, String lastName, String password, LocalDate birthdate) {
-        if (list.contains(editingUser)) {
+        if (!list.contains(editingUser)) {
             // TODO: Should throw an exception instead...
             return;
         }

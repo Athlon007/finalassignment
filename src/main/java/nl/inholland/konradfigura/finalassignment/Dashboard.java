@@ -226,7 +226,7 @@ public class Dashboard implements Initializable, UserLoadable {
             HelloApplication.getDatabase().editUser(editingUser, firstName, lastName, password, birthdate);
         }
         else {
-            HelloApplication.getDatabase().add(firstName, lastName, birthdate, "password1");
+            HelloApplication.getDatabase().add(firstName, lastName, birthdate, password);
         }
 
         loadTableMembers();

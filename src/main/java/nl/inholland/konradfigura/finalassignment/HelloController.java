@@ -30,7 +30,7 @@ public class HelloController {
         User user = HelloApplication.getDatabase().getUser(txtUsername.getText(), txtPassword.getText());
 
         if (user == null) {
-            setWarningText("User does not exist.");
+            setWarningText("User does not exist, or password is incorrect.");
             return;
         }
 
