@@ -35,6 +35,6 @@ public class User implements Serializable {
     public void setPassword(String value) { password = value; }
 
     public int getId() {
-        return HelloApplication.getDatabase().getUserId(this);
+        return HelloApplication.getDatabase().getId(this);
     }
 }

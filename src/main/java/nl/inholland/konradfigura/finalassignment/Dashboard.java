@@ -106,7 +106,7 @@ public class Dashboard implements Initializable, UserLoadable {
 
     private void loadTableMembers() {
         tblMembers.getItems().clear();
-        tblMembers.getItems().addAll(HelloApplication.getDatabase().getAllUsers());
+        tblMembers.getItems().addAll(HelloApplication.getDatabase().getAll());
     }
 
     @FXML
@@ -190,7 +190,7 @@ public class Dashboard implements Initializable, UserLoadable {
             HelloApplication.getDatabase().editUser(editingUser, firstName, lastName, password, birthdate);
         }
         else {
-            HelloApplication.getDatabase().addUser(firstName, lastName, birthdate, "password1");
+            HelloApplication.getDatabase().add(firstName, lastName, birthdate, "password1");
         }
 
         loadTableMembers();
@@ -213,7 +213,7 @@ public class Dashboard implements Initializable, UserLoadable {
             return;
         }
 
-        HelloApplication.getDatabase().deleteUser(selectedPerson);
+        HelloApplication.getDatabase().delete(selectedPerson);
         loadTableMembers();
     }
 }

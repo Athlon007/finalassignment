@@ -1,6 +1,5 @@
 package nl.inholland.konradfigura.finalassignment;
 
-import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

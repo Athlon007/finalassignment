@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import nl.inholland.konradfigura.finalassignment.Database.Database;
+import nl.inholland.konradfigura.finalassignment.Database.UserDatabase;
 import nl.inholland.konradfigura.finalassignment.Model.User;
 import nl.inholland.konradfigura.finalassignment.Model.UserLoadable;
 
@@ -16,13 +16,13 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     private static Stage stage;
 
-    private static Database db;
+    private static UserDatabase db;
 
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this::onCloseHandler);
-        db = new Database();
+        db = new UserDatabase();
         loadView(Views.LOGIN);
     }
 
@@ -58,7 +58,7 @@ public class HelloApplication extends Application {
         stage.setY((rect.getHeight() - stage.getHeight()) / 2);
     }
 
-    public static Database getDatabase() {
+    public static UserDatabase getDatabase() {
         return db;
     }
 
