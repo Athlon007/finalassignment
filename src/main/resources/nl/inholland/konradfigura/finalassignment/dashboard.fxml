@@ -147,5 +147,6 @@
             <Font size="39.0" />
          </font>
       </Label>
+      <Button layoutX="360.0" layoutY="30.0" mnemonicParsing="false" onAction="#onLogoutClick" styleClass="button-secondary" text="Logout" />
    </children>
 </AnchorPane>

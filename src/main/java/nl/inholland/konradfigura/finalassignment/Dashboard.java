@@ -15,6 +15,7 @@ import nl.inholland.konradfigura.finalassignment.model.Member;
 import nl.inholland.konradfigura.finalassignment.model.User;
 import nl.inholland.konradfigura.finalassignment.model.UserLoadable;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -432,7 +433,7 @@ public class Dashboard implements Initializable, UserLoadable {
             lblCollectionError.setText(ex.getMessage());
         }
     }
-    
+
     @FXML
     private void onSearchTyped(ActionEvent event) {
         String query = ((TextField)event.getSource()).getText();
@@ -447,6 +448,15 @@ public class Dashboard implements Initializable, UserLoadable {
     private void loadTableItems(String query) {
         tblItems.getItems().clear();
         tblItems.getItems().addAll(HelloApplication.getLibrary().getAll(query));
+    }
+
+    @FXML
+    private void onLogoutClick() {
+        try {
+            HelloApplication.loadView(Views.LOGIN);
+        } catch (IOException e) {
+            System.err.println("Unable to logout (what)");
+        }
     }
 }
 
