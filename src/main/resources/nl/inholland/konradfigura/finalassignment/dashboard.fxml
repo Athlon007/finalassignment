@@ -85,8 +85,8 @@
                            </columnResizePolicy>
                         </TableView>
                         <Button layoutX="54.0" layoutY="437.0" mnemonicParsing="false" onAction="#onAddItemOpenMenuClick" text="Add Item" AnchorPane.bottomAnchor="34.5" AnchorPane.leftAnchor="54.0" />
-                        <Button layoutX="179.0" layoutY="437.0" mnemonicParsing="false" styleClass="button-secondary" text="Edit Item" AnchorPane.bottomAnchor="34.5" AnchorPane.leftAnchor="179.0" />
-                        <Button layoutX="304.0" layoutY="437.0" mnemonicParsing="false" styleClass="button-important" text="Delete Item" AnchorPane.bottomAnchor="34.5" AnchorPane.leftAnchor="304.0" />
+                        <Button layoutX="179.0" layoutY="437.0" mnemonicParsing="false" onAction="#onEditItemClick" styleClass="button-secondary" text="Edit Item" AnchorPane.bottomAnchor="34.5" AnchorPane.leftAnchor="179.0" />
+                        <Button layoutX="304.0" layoutY="437.0" mnemonicParsing="false" onAction="#onDeleteItemClick" styleClass="button-important" text="Delete Item" AnchorPane.bottomAnchor="34.5" AnchorPane.leftAnchor="304.0" />
                         <AnchorPane fx:id="paneAddItem" layoutX="54.0" prefHeight="482.0" prefWidth="1010.0" style="-fx-background-color: #c9c9c9;" visible="false" AnchorPane.bottomAnchor="14.5" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="53.0" AnchorPane.topAnchor="1.0">
                            <children>
                               <Label fx:id="lblWelcome1111" prefHeight="53.0" prefWidth="391.0" styleClass="header-category" text="Add item" textFill="WHITE">
@@ -105,7 +105,7 @@
                               <Button layoutX="125.0" layoutY="436.0" mnemonicParsing="false" onAction="#onCancelAddItemClick" styleClass="button-secondary" text="Cancel" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="125.0" />
                            </children>
                         </AnchorPane>
-                        <TextField layoutX="757.0" layoutY="12.0" prefHeight="30.0" prefWidth="307.0" promptText="Search" AnchorPane.rightAnchor="54.0" />
+                        <TextField fx:id="txtItemSearch" layoutX="757.0" layoutY="12.0" onAction="#onSearchTyped" prefHeight="30.0" prefWidth="307.0" promptText="Search" AnchorPane.rightAnchor="54.0" />
                      </children>
                   </AnchorPane>
             </content>
@@ -118,15 +118,17 @@
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                  <children>
-                                    <TextField layoutX="15.0" layoutY="14.0" prefHeight="30.0" prefWidth="455.0" promptText="Item code" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                                    <TextField layoutX="15.0" layoutY="54.0" prefHeight="30.0" prefWidth="455.0" promptText="Member identifier" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                                    <Button layoutX="14.0" layoutY="96.0" mnemonicParsing="false" prefWidth="125.0" text="Lend item" />
+                                    <Label fx:id="lblLendError" layoutX="14.0" layoutY="134.0" styleClass="error-label" text="wow, many issues" />
+                                    <TextField fx:id="txtLendItemCode" layoutX="15.0" layoutY="14.0" prefHeight="30.0" prefWidth="455.0" promptText="Item code" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                                    <TextField fx:id="txtLendMemberId" layoutX="15.0" layoutY="54.0" prefHeight="30.0" prefWidth="455.0" promptText="Member identifier" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                                    <Button layoutX="14.0" layoutY="96.0" mnemonicParsing="false" onAction="#onLendClick" prefWidth="125.0" text="Lend item" />
                                  </children>
                               </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                  <children>
-                                    <TextField layoutX="15.0" layoutY="14.0" prefHeight="30.0" prefWidth="455.0" promptText="Item code" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="14.0" />
-                                    <Button layoutX="14.0" layoutY="56.0" mnemonicParsing="false" prefWidth="125.0" text="Receive item" />
+                                    <TextField fx:id="txtReceiveCode" layoutX="15.0" layoutY="14.0" prefHeight="30.0" prefWidth="455.0" promptText="Item code" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="14.0" />
+                                    <Button layoutX="14.0" layoutY="56.0" mnemonicParsing="false" onAction="#onReceiveClick" prefWidth="125.0" text="Receive item" />
+                                    <Label fx:id="lblReceiveError" layoutX="14.0" layoutY="94.0" styleClass="error-label" text="wow, many issues" />
                                  </children></AnchorPane>
                           </items>
                         </SplitPane>

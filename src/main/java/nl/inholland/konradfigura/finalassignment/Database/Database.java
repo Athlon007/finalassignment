@@ -1,5 +1,6 @@
 package nl.inholland.konradfigura.finalassignment.Database;
 
+import nl.inholland.konradfigura.finalassignment.Model.Exceptions.NotFoundException;
 import nl.inholland.konradfigura.finalassignment.Model.User;
 
 import java.io.*;
@@ -12,7 +13,7 @@ public abstract class Database<Serializable> {
     protected List<Serializable> list;
 
     public abstract void add(Serializable obj);
-    public abstract void delete(Serializable obj);
+    public abstract void delete(Serializable obj) throws NotFoundException;
     public List<Serializable> getAll() {
         return list;
     }
@@ -23,7 +24,7 @@ public abstract class Database<Serializable> {
      * @throws ClassNotFoundException
      */
     protected List<Serializable> read() throws IOException, ClassNotFoundException {
-        List<Serializable> output = null;
+        List<Serializable> output;
         File f = new File(getDatabaseFile());
         if (f.exists() && !f.isDirectory()) {
             FileInputStream fis = new FileInputStream(f);
@@ -76,4 +77,6 @@ public abstract class Database<Serializable> {
         }
         return -1;
     }
+
+    public abstract Serializable getById(int id);
 }

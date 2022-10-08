@@ -1,14 +1,13 @@
 package nl.inholland.konradfigura.finalassignment.Database;
 
 import javafx.scene.control.Alert;
+import nl.inholland.konradfigura.finalassignment.Model.Exceptions.UserNotFoundException;
 import nl.inholland.konradfigura.finalassignment.Model.User;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class UserDatabase extends Database<User>  {
-    // TODO: Make an abstract version of Database object, then inherit it here.
-
     @Override
     public String getDatabaseFile() { return "data.db"; }
 
@@ -36,7 +35,9 @@ public class UserDatabase extends Database<User>  {
         list.add(user);
     }
 
-    public void add(String firstname, String lastname, LocalDate birthdate, String password) {
+    public void add(String firstname, String lastname, LocalDate birthdate, String password) throws IllegalArgumentException {
+        isInputValid(firstname, lastname, password, birthdate);
+
         User user = new User(generateId(), firstname, lastname, birthdate, password);
         add(user);
     }
@@ -51,24 +52,47 @@ public class UserDatabase extends Database<User>  {
     }
 
     @Override
-    public void delete(User user) {
-        if (list.contains(user)) {
-            list.remove(user);
+    public void delete(User user) throws UserNotFoundException {
+        if (!list.contains(user)) {
+            throw new UserNotFoundException("User was not found.");
         }
+        list.remove(user);
     }
 
-    public void editUser(User editingUser, String firstName, String lastName, String password, LocalDate birthdate) {
+    public void editUser(User editingUser, String firstname, String lastname, String password, LocalDate birthdate)
+            throws UserNotFoundException {
+        isInputValid(firstname, lastname, password, birthdate);
+
         if (!list.contains(editingUser)) {
-            // TODO: Should throw an exception instead...
-            return;
+            throw new UserNotFoundException(String.format("User '%s %s' was not found.", firstname, lastname));
         }
 
         int index = getItemPositonWithinList(editingUser);
-        editingUser.setFirstName(firstName);
-        editingUser.setLastName(lastName);
+        editingUser.setFirstName(firstname);
+        editingUser.setLastName(lastname);
         editingUser.setPassword(password);
         editingUser.setBirthdate(birthdate);
         list.set(index, editingUser);
+    }
+
+    private void isInputValid(String firstname, String lastname, String password, LocalDate birthdate) {
+        String errors = "";
+        if (firstname.isEmpty()) {
+            errors += "First name missing\n";
+        }
+        if (lastname.isEmpty()) {
+            errors += "Last name missing\n";
+        }
+        if (password.isEmpty()) {
+            errors += "Password missing\n";
+        }
+        if (birthdate == null) {
+            errors += "Birth date missing\n";
+        }
+
+        if (errors.length() > 0) {
+            throw new IllegalArgumentException(errors);
+        }
     }
 
     @Override
@@ -81,5 +105,15 @@ public class UserDatabase extends Database<User>  {
         }
 
         return highestId + 1;
+    }
+
+    @Override
+    public User getById(int id) {
+        for (User user : list) {
+            if (user.getId() == id) {
+                return user;
+            }
+        }
+        return null;
     }
 }

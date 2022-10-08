@@ -1,14 +1,22 @@
 package nl.inholland.konradfigura.finalassignment;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import nl.inholland.konradfigura.finalassignment.Model.Exceptions.BookNotAvailableException;
+import nl.inholland.konradfigura.finalassignment.Model.Exceptions.BookNotFoundException;
+import nl.inholland.konradfigura.finalassignment.Model.Exceptions.OvertimeException;
+import nl.inholland.konradfigura.finalassignment.Model.Exceptions.UserNotFoundException;
+import nl.inholland.konradfigura.finalassignment.Model.LibraryItem;
 import nl.inholland.konradfigura.finalassignment.Model.User;
 import nl.inholland.konradfigura.finalassignment.Model.UserLoadable;
 
+import javax.swing.*;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -65,10 +73,6 @@ public class Dashboard implements Initializable, UserLoadable {
     @FXML
     private TableColumn tblMembersBirthdate;
 
-    private User currentUser;
-    private User editingUser;
-    private boolean editUserMode;
-
     @FXML
     private Label lblErrorAddMember;
 
@@ -96,16 +100,49 @@ public class Dashboard implements Initializable, UserLoadable {
     @FXML
     private Label lblErrorAddItem;
 
+    // LENDING/RECEIVING
+    @FXML
+    private TextField txtLendItemCode;
+    @FXML
+    private TextField txtLendMemberId;
+    @FXML
+    private Label lblLendError;
+
+    @FXML
+    private TextField txtReceiveCode;
+    @FXML
+    private Label lblReceiveError;
+
+    @FXML
+    private TextField txtItemSearch;
+
+
+    // VARIABLES.
+    private final String GOOD_LABEL_CLASS = "good-label";
+    private final String ERROR_LABEL_CLASS = "error-label";
+
+    private User currentUser;
+    private User editingUser;
+    private boolean editUserMode;
+
+    private LibraryItem editingItem;
+    private boolean editItemMode;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tabContainer.getSelectionModel().selectedItemProperty().addListener(
-                (observableValue, tab, t1) -> {
-                    // TODO: Implement tab changing actions.
-                    if (tab == tabMembers) {
+                (observableValue, oldTab, newTab) -> {
+                    if (newTab == tabMembers) {
                         paneAddMember.setVisible(false);
+                        loadTableMembers();
                     }
-                    else if (tab == tabCollection) {
+                    else if (newTab == tabCollection) {
                         paneAddItem.setVisible(false);
+                        loadTableItems();
+                    }
+                    else if (newTab == tabLending) {
+                        lblLendError.setText("");
+                        lblReceiveError.setText("");
                     }
                 }
         );
@@ -115,15 +152,20 @@ public class Dashboard implements Initializable, UserLoadable {
         tblMembersFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         tblMembersLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         tblMembersBirthdate.setCellValueFactory(new PropertyValueFactory<>("birthdate"));
-        loadTableMembers();
 
         tblItemsItemCode.setCellValueFactory(new PropertyValueFactory<>("id"));
         tblItemsAvailable.setCellValueFactory(new PropertyValueFactory<>("availableHumanReadable"));
         tblItemsTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         tblItemsAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
-        loadTableItems();
 
         lblErrorAddMember.setText("");
+
+        // Prevent text boxes that cannot accept digits... to not accept digits.
+        txtLendItemCode.textProperty().addListener(new NoDigitTextFieldListener(txtLendItemCode));
+        txtLendMemberId.textProperty().addListener(new NoDigitTextFieldListener(txtLendMemberId));
+        txtReceiveCode.textProperty().addListener(new NoDigitTextFieldListener(txtReceiveCode));
+        lblLendError.setText("");
+        lblReceiveError.setText("");
     }
 
     public void loadUser(User user) {
@@ -181,6 +223,8 @@ public class Dashboard implements Initializable, UserLoadable {
     @FXML
     protected void onAddItemOpenMenuClick(ActionEvent event) {
         paneAddItem.setVisible(true);
+        btnAddItem.setText("Add item");
+        editItemMode = false;
         txtAddItemTitle.setText("");
         txtAddItemAuthor.setText("");
         lblErrorAddItem.setText("");
@@ -196,37 +240,24 @@ public class Dashboard implements Initializable, UserLoadable {
         root.requestFocus();
 
         lblErrorAddMember.setText("");
-        String errors = "";
 
         String firstName = txtNewMemberFirstName.getText();
         String lastName = txtNewMemberLastName.getText();
         String password = pwdNewMemberPassword.getText();
-
         LocalDate birthdate = dpNewMemberBirthdate.getValue();
 
-        if (firstName.isEmpty()) {
-            errors += "First name missing\n";
+        try {
+            if (editUserMode) {
+                HelloApplication.getDatabase().editUser(editingUser, firstName, lastName, password, birthdate);
+            } else {
+                HelloApplication.getDatabase().add(firstName, lastName, birthdate, password);
+            }
         }
-        if (lastName.isEmpty()) {
-            errors += "Last name missing\n";
+        catch (UserNotFoundException ex) {
+            lblErrorAddMember.setText(ex.getMessage());
         }
-        if (password.isEmpty()) {
-            errors += "Password missing\n";
-        }
-        if (birthdate == null) {
-            errors += "Birth date missing\n";
-        }
-
-        if (errors.length() > 0) {
-            lblErrorAddMember.setText(errors);
-            return;
-        }
-
-        if (editUserMode) {
-            HelloApplication.getDatabase().editUser(editingUser, firstName, lastName, password, birthdate);
-        }
-        else {
-            HelloApplication.getDatabase().add(firstName, lastName, birthdate, password);
+        catch (IllegalArgumentException ex) {
+            lblErrorAddMember.setText(ex.getMessage());
         }
 
         loadTableMembers();
@@ -242,6 +273,7 @@ public class Dashboard implements Initializable, UserLoadable {
         }
 
         if (selectedPerson == currentUser) {
+            // TODO: Move that to UserDatabase.
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle("Oops!");
             a.setHeaderText("Cannot remove self, dummy.");
@@ -249,33 +281,177 @@ public class Dashboard implements Initializable, UserLoadable {
             return;
         }
 
-        HelloApplication.getDatabase().delete(selectedPerson);
-        loadTableMembers();
+        try {
+            HelloApplication.getDatabase().delete(selectedPerson);
+            loadTableMembers();
+        }
+        catch (UserNotFoundException ex) {
+            // TODO: Add this.
+        }
     }
 
     @FXML
     protected void onAddItemClick(ActionEvent event) {
-        String issues = "";
-
         String title = txtAddItemTitle.getText();
         String author = txtAddItemAuthor.getText();
 
-        if (title.isEmpty()) {
-            issues += "Title is missing\n";
+        try {
+            if (editItemMode) {
+                HelloApplication.getLibrary().edit(editingItem, title, author);
+            }
+            else {
+                HelloApplication.getLibrary().add(title, author);
+            }
+            paneAddItem.setVisible(false);
+            loadTableItems();
+        } catch (Exception ex) {
+            lblErrorAddItem.setText(ex.getMessage());
         }
+    }
 
-        if (author.isEmpty()) {
-            issues += "Author is missing\n";
-        }
-
-        if (issues.length() > 0) {
+    @FXML
+    protected void onLendClick(ActionEvent event) {
+        setLabelRed(lblLendError);
+        lblLendError.setText("");
+        String bookCodeString = txtLendItemCode.getText();
+        String lenderCodeString = txtLendMemberId.getText();
+        if (!isLendInputValid(bookCodeString, lenderCodeString)) {
             return;
         }
 
-        HelloApplication.getLibrary().add(title, author);
+        int bookCode = Integer.parseInt(txtLendItemCode.getText());
+        int lenderCode = Integer.parseInt(txtLendMemberId.getText());
 
-        paneAddItem.setVisible(false);
-        loadTableItems();
+        LibraryItem book = HelloApplication.getLibrary().getById(bookCode);
+
+        try {
+            User user = HelloApplication.getDatabase().getById(lenderCode);
+            HelloApplication.getLibrary().lendBook(book, user, LocalDate.now());
+
+            setLabelGreen(lblLendError);
+            lblLendError.setText(String.format("Book %s [%d] has been borrowed to member %s",
+                    book.getTitle(), book.getId(), user.getFirstName()));
+            txtLendItemCode.setText("");
+            txtLendMemberId.setText("");
+        }
+        catch (Exception ex) {
+            lblLendError.setText(ex.getMessage());
+        }
+    }
+
+    private boolean isLendInputValid(String bookCode, String lenderCode) {
+        String issues = "";
+        if (bookCode.isEmpty()) {
+            issues += "Item code is missing.\n";
+        }
+
+        if (lenderCode.isEmpty()) {
+            issues += "Lender code is missing.\n";
+        }
+
+        lblLendError.setText(issues);
+        return issues.length() == 0;
+    }
+
+    @FXML
+    protected void onReceiveClick(ActionEvent event) {
+        lblReceiveError.setText("");
+        setLabelRed(lblReceiveError);;
+
+        if (txtReceiveCode.getText().isEmpty()) {
+            lblReceiveError.setText("Item code is empty.");
+            return;
+        }
+
+        int itemCode = Integer.parseInt(txtReceiveCode.getText());
+
+        try {
+            LibraryItem item = HelloApplication.getLibrary().getById(itemCode);
+            HelloApplication.getLibrary().returnBook(item);
+
+            setLabelGreen(lblReceiveError);
+            lblReceiveError.setText("Book has been returned!");
+            txtReceiveCode.setText("");
+        }
+        catch (BookNotFoundException ex) {
+            lblReceiveError.setText("Book not found.");
+        }
+        catch (OvertimeException ex) {
+            lblReceiveError.setText("Book was returned after more than 3 weeks!");
+        }
+        catch (NullPointerException ex) {
+            lblReceiveError.setText("Book is not borrowed.");
+        }
+    }
+
+    private void setLabelGreen(Label label) {
+        if (!label.getStyleClass().contains(GOOD_LABEL_CLASS)) {
+            label.getStyleClass().add(GOOD_LABEL_CLASS);
+        }
+
+        if (label.getStyleClass().contains(ERROR_LABEL_CLASS)) {
+            label.getStyleClass().remove(ERROR_LABEL_CLASS);
+        }
+    }
+
+    private void setLabelRed(Label label) {
+        if (!label.getStyleClass().contains(ERROR_LABEL_CLASS)) {
+            label.getStyleClass().add(ERROR_LABEL_CLASS);
+        }
+
+        if (label.getStyleClass().contains(GOOD_LABEL_CLASS)) {
+            label.getStyleClass().remove(GOOD_LABEL_CLASS);
+        }
+    }
+
+    @FXML
+    private void onEditItemClick(ActionEvent event) {
+        LibraryItem item = (LibraryItem)tblItems.getSelectionModel().getSelectedItem();
+        lblErrorAddItem.setText("");
+
+        if (item == null) {
+            return;
+        }
+
+        editingItem = item;
+        editItemMode = true;
+
+        btnAddItem.setText("Edit item");
+        paneAddItem.setVisible(true);
+
+        txtAddItemTitle.setText(editingItem.getTitle());
+        txtAddItemAuthor.setText(editingItem.getAuthor());
+    }
+
+    @FXML
+    private void onDeleteItemClick(ActionEvent event) {
+        LibraryItem item = (LibraryItem)tblItems.getSelectionModel().getSelectedItem();
+        if (item == null) {
+            return;
+        }
+
+        try {
+            HelloApplication.getLibrary().delete(item);
+            loadTableItems();
+        } catch (BookNotFoundException ex) {
+            // TODO: Add lblWarning
+        }
+    }
+
+    @FXML
+    private void onSearchTyped(ActionEvent event) {
+        String query = ((TextField)event.getSource()).getText();
+        if (query.isEmpty()) {
+            loadTableItems();
+        }
+        else {
+            loadTableItems(query);
+        }
+    }
+
+    private void loadTableItems(String query) {
+        tblItems.getItems().clear();
+        tblItems.getItems().addAll(HelloApplication.getLibrary().getAll(query));
     }
 }
 

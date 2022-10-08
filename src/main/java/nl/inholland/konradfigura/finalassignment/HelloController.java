@@ -26,7 +26,6 @@ public class HelloController {
     }
 
     private void login() {
-        StringBuilder builder = new StringBuilder();
         User user = HelloApplication.getDatabase().getUser(txtUsername.getText(), txtPassword.getText());
 
         if (user == null) {

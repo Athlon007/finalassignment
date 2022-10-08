@@ -132,3 +132,7 @@
     -fx-text-fill: #be0000;
     -fx-font-weight: bold;
 }
+
+.good-label {
+    -fx-text-fill: green;
+}

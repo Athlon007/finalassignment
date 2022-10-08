@@ -1,16 +1,16 @@
 package nl.inholland.konradfigura.finalassignment.Model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class LibraryItem implements Serializable {
     private int id;
-    private boolean isAvailable;
     private String title;
     private String author;
+    private LendInfo lendInfo;
 
     public LibraryItem(int id, boolean isAvailable, String title, String author) {
         this.id = id;
-        this.isAvailable = isAvailable;
         this.title = title;
         this.author = author;
     }
@@ -21,14 +21,6 @@ public class LibraryItem implements Serializable {
 
     public void setId(int itemID) {
         this.id = itemID;
-    }
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(boolean available) {
-        isAvailable = available;
     }
 
     public String getTitle() {
@@ -47,7 +39,23 @@ public class LibraryItem implements Serializable {
         this.author = author;
     }
 
+    public boolean isAvailable() {
+        return lendInfo == null;
+    }
+
     public String isAvailableHumanReadable() {
-        return isAvailable ? "Yes" : "No";
+        return isAvailable() ? "Yes" : "No";
+    }
+
+    public void lend(User lender, LocalDate date) {
+        lendInfo = new LendInfo(lender, date);
+    }
+
+    public LendInfo getLendInfo() { return lendInfo; }
+
+    public LendInfo returnItem() {
+        LendInfo info = lendInfo;
+        lendInfo = null;
+        return info;
     }
 }

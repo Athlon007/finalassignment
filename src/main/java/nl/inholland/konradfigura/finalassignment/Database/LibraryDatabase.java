@@ -1,11 +1,21 @@
 package nl.inholland.konradfigura.finalassignment.Database;
 
 import javafx.scene.control.Alert;
+import nl.inholland.konradfigura.finalassignment.Model.Exceptions.BookNotAvailableException;
+import nl.inholland.konradfigura.finalassignment.Model.Exceptions.BookNotFoundException;
+import nl.inholland.konradfigura.finalassignment.Model.Exceptions.UserNotFoundException;
+import nl.inholland.konradfigura.finalassignment.Model.LendInfo;
 import nl.inholland.konradfigura.finalassignment.Model.LibraryItem;
+import nl.inholland.konradfigura.finalassignment.Model.Exceptions.OvertimeException;
+import nl.inholland.konradfigura.finalassignment.Model.User;
 
+import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryDatabase extends Database<LibraryItem> {
+    private final int OVERTIME_DAYS = 21;
 
     public LibraryDatabase() {
         try {
@@ -18,7 +28,14 @@ public class LibraryDatabase extends Database<LibraryItem> {
         }
     }
 
-    public void add(String title, String author) {
+    public void add(String title, String author) throws NullPointerException {
+        if (title.isEmpty()) {
+            throw new NullPointerException("Title is empty.");
+        }
+        if (author.isEmpty()) {
+            throw new NullPointerException("Author is empty.");
+        }
+
         LibraryItem item = new LibraryItem(generateId(), true, title, author);
         add(item);
     }
@@ -29,10 +46,15 @@ public class LibraryDatabase extends Database<LibraryItem> {
     }
 
     @Override
-    public void delete(LibraryItem obj) {
-        if (list.contains(obj)) {
-            list.remove(obj);
+    public void delete(LibraryItem obj) throws BookNotFoundException {
+        if (!list.contains(obj)) {
+            throw new BookNotFoundException("Book is not in the database.");
         }
+        if (!obj.isAvailable()) {
+            throw new BookNotFoundException("Book is not available");
+        }
+
+        list.remove(obj);
     }
 
     @Override
@@ -53,5 +75,88 @@ public class LibraryDatabase extends Database<LibraryItem> {
             }
         }
         return highestId + 1;
+    }
+
+    @Override
+    public LibraryItem getById(int id) {
+        for (LibraryItem item : list) {
+            if (item.getId() == id) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    public void lendBook(LibraryItem book, User member, LocalDate date)
+            throws BookNotFoundException, UserNotFoundException, BookNotAvailableException {
+        final int index = getItemPositonWithinList(book);
+
+        if (index == -1) {
+            throw new BookNotFoundException("Unable to find the book with such ID.");
+        }
+
+        if (member == null) {
+            throw new UserNotFoundException("Member was not found.");
+        }
+
+        if (!book.isAvailable()) {
+            throw new BookNotAvailableException("Book is already borrowed.");
+        }
+
+        book.lend(member, date);
+        list.set(index, book);
+    }
+
+    public void returnBook(LibraryItem book) throws BookNotFoundException, OvertimeException, NullPointerException {
+        final int index = getItemPositonWithinList(book);
+        if (index == -1) {
+            throw new BookNotFoundException("Unable to find the book with such ID.");
+        }
+
+        final LendInfo info = book.returnItem();
+
+        if (info == null) {
+            throw new NullPointerException("Item is not borrowed.");
+        }
+
+        final LocalDate lendDatePlusOvertime = info.date().plusDays(OVERTIME_DAYS);
+        if (LocalDate.now().isAfter(lendDatePlusOvertime)) {
+            throw new OvertimeException("Book was returned too late.");
+        }
+    }
+
+    public void edit(LibraryItem book, String title, String author) throws IllegalArgumentException, BookNotFoundException, BookNotAvailableException {
+        if (title.isEmpty()) {
+            throw new IllegalArgumentException("Title is empty.");
+        }
+
+        if (author.isEmpty()) {
+            throw new IllegalArgumentException("Author is empty.");
+        }
+
+        if (!list.contains(book)) {
+            throw new BookNotFoundException("Book is not in the database.");
+        }
+
+        if (!book.isAvailable()) {
+            throw new BookNotAvailableException("Book is not available.");
+        }
+
+        int index = getItemPositonWithinList(book);
+        book.setTitle(title);
+        book.setAuthor(author);
+        list.set(index, book);
+    }
+
+    public List<LibraryItem> getAll(String query) {
+        List<LibraryItem> result = new ArrayList<>();
+        for (LibraryItem item : list) {
+            if (item.getTitle().toUpperCase().contains(query.toUpperCase())
+                    || item.getAuthor().toUpperCase().contains(query.toUpperCase())) {
+                result.add(item);
+            }
+        }
+        return result;
     }
 }
