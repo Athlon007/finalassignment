@@ -5,7 +5,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
 
 public class NoDigitTextFieldListener implements ChangeListener<String> {
-    private TextField field;
+    private final TextField field;
 
     public NoDigitTextFieldListener(TextField field) {
         this.field = field;

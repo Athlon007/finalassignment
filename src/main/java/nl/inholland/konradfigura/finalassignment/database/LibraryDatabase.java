@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryDatabase extends Database<LibraryItem> {
-    public final int OVERTIME_DAYS = 21;
+    public static final int OVERTIME_DAYS = 21;
 
     public LibraryDatabase() {
         super("library.db");
@@ -49,7 +49,7 @@ public class LibraryDatabase extends Database<LibraryItem> {
             throw new NullPointerException("Author is empty.");
         }
 
-        LibraryItem item = new LibraryItem(generateId(), true, title, author);
+        LibraryItem item = new LibraryItem(generateId(), title, author);
         add(item);
     }
 
@@ -72,7 +72,7 @@ public class LibraryDatabase extends Database<LibraryItem> {
 
     @Override
     protected int generateId() {
-        if (list == null || list.size() == 0) {
+        if (list == null || list.isEmpty()) {
             return 1;
         }
 
@@ -98,7 +98,7 @@ public class LibraryDatabase extends Database<LibraryItem> {
 
     public void lendBook(LibraryItem book, Member member, LocalDate date)
             throws BookNotFoundException, MemberNotFoundException, BookNotAvailableException {
-        final int index = getItemPositonWithinList(book);
+        final int index = getItemPositionWithinList(book);
 
         if (index == -1) {
             throw new BookNotFoundException("Unable to find the book with such ID.");
@@ -117,7 +117,7 @@ public class LibraryDatabase extends Database<LibraryItem> {
     }
 
     public void returnBook(LibraryItem book) throws BookNotFoundException, OvertimeException, NullPointerException {
-        final int index = getItemPositonWithinList(book);
+        final int index = getItemPositionWithinList(book);
         if (index == -1) {
             throw new BookNotFoundException("Unable to find the book with such ID.");
         }
@@ -149,10 +149,10 @@ public class LibraryDatabase extends Database<LibraryItem> {
         }
 
         if (!book.isAvailable()) {
-            throw new BookNotAvailableException("Book is not available.");
+            throw new BookNotAvailableException("Book has been lent, and can't be edited or deleted.");
         }
 
-        int index = getItemPositonWithinList(book);
+        int index = getItemPositionWithinList(book);
         book.setTitle(title);
         book.setAuthor(author);
         list.set(index, book);

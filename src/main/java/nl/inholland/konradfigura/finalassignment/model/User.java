@@ -1,14 +1,12 @@
 package nl.inholland.konradfigura.finalassignment.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 public class User implements Serializable {
 
     private int id;
-    private String username;
-    private LocalDate birthdate;
-    private String password;
+    private final String username;
+    private final String password;
 
     public User(int id, String username, String password) {
         this.id = id;
@@ -29,5 +27,4 @@ public class User implements Serializable {
     public String getPassword() {
         return password;
     }
-    public void setPassword(String value) { password = value; }
 }

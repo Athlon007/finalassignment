@@ -24,13 +24,13 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        this.stage = stage;
+        HelloApplication.stage = stage;
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this::onCloseHandler);
 
         databases = new Database[] {
-            new UserDatabase(),
-            new MemberDatabase(),
-            new LibraryDatabase()
+                new UserDatabase(),
+                new MemberDatabase(),
+                new LibraryDatabase()
         };
 
         loadView(Views.LOGIN);
@@ -49,7 +49,7 @@ public class HelloApplication extends Application {
         switch (view) {
             case LOGIN -> resourceName = "hello-view.fxml";
             case DASHBOARD -> resourceName = "dashboard.fxml";
-            default -> new UnsupportedOperationException("View " + view + " does not exist.");
+            default -> System.err.println("View " + view + " does not exist.");
         }
 
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(resourceName));
@@ -58,8 +58,8 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.show();
 
-        if (fxmlLoader.getController() instanceof UserLoadable) {
-           ((UserLoadable) fxmlLoader.getController()).loadUser(asUser);
+        if (fxmlLoader.getController() instanceof UserLoadable loadable) {
+            loadable.loadUser(asUser);
         }
 
         // Center the view to the currently active display
@@ -72,9 +72,11 @@ public class HelloApplication extends Application {
         try {
             for (Database db : databases) {
                 db.write();
-            };
+            }
         }
-        catch (Exception ex ){ }
+        catch (Exception ex ){
+            System.err.println(ex.getMessage());
+        }
     }
 
     public static UserDatabase getUsers() {
@@ -89,7 +91,6 @@ public class HelloApplication extends Application {
 
     /**
      * Returns the screen, on which currently is mouse.
-     * @return
      */
     private static Screen getActiveScreen() {
         Point mousePosition = MouseInfo.getPointerInfo().getLocation();

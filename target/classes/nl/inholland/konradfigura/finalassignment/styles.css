@@ -124,10 +124,6 @@
     -fx-padding: 10px;
 }
 
-.table-column {
-
-}
-
 .error-label {
     -fx-text-fill: #be0000;
     -fx-font-weight: bold;

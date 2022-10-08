@@ -57,7 +57,7 @@ public abstract class Database<Serializable> {
      */
     protected abstract int generateId();
 
-    protected int getItemPositonWithinList(Serializable obj) {
+    protected int getItemPositionWithinList(Serializable obj) {
         int i = 0;
         for (Serializable entry : list) {
             if (entry == obj) {

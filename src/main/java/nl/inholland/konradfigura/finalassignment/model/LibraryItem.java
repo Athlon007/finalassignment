@@ -9,7 +9,7 @@ public class LibraryItem implements Serializable {
     private String author;
     private LendInfo lendInfo;
 
-    public LibraryItem(int id, boolean isAvailable, String title, String author) {
+    public LibraryItem(int id, String title, String author) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -43,15 +43,9 @@ public class LibraryItem implements Serializable {
         return lendInfo == null;
     }
 
-    public String isAvailableHumanReadable() {
-        return isAvailable() ? "Yes" : "No";
-    }
-
     public void lend(Member lender, LocalDate date) {
         lendInfo = new LendInfo(lender, date);
     }
-
-    public LendInfo getLendInfo() { return lendInfo; }
 
     public LendInfo returnItem() {
         LendInfo info = lendInfo;

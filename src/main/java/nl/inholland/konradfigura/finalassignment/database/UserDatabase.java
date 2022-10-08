@@ -18,7 +18,7 @@ public class UserDatabase extends Database<User>  {
             a.setHeaderText("Unable to load database file.");
         }
 
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             createUsers();
         }
     }
@@ -43,12 +43,12 @@ public class UserDatabase extends Database<User>  {
             add("James", "password");
             add("Gordon", "hello");
         } catch (Exception e) {
-            System.out.print("Wait, how did this happen?");
+            System.err.print("Wait, how did this happen?");
         }
         User user = list.get(0);
         User user2 = list.get(1);
-        System.out.println(String.format("A dummy account has been added.\nLogin: %s\nPassword: %s", user.getUsername(), user.getPassword()));
-        System.out.println(String.format("A dummy account has been added.\nLogin: %s\nPassword: %s", user2.getUsername(), user2.getPassword()));
+        System.out.printf("A dummy account has been added.%nLogin: %s%nPassword: %s%n", user.getUsername(), user.getPassword());
+        System.out.printf("A dummy account has been added.%nLogin: %s%nPassword: %s%n", user2.getUsername(), user2.getPassword());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class UserDatabase extends Database<User>  {
 
     private boolean existsUser(String username) {
         for (User user : list) {
-            if (user.getUsername().toUpperCase() == username.toUpperCase()) {
+            if (user.getUsername().equalsIgnoreCase(username)) {
                 return true;
             }
         }

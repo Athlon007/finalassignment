@@ -1,6 +1,5 @@
 package nl.inholland.konradfigura.finalassignment;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -20,7 +19,7 @@ public class HelloController {
     private PasswordField txtPassword;
 
     @FXML
-    protected void onLoginButtonClick(ActionEvent event) {
+    protected void onLoginButtonClick() {
         login();
     }
 
