@@ -1,24 +1,23 @@
 package nl.inholland.konradfigura.finalassignment;
 
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import nl.inholland.konradfigura.finalassignment.Model.Exceptions.BookNotAvailableException;
 import nl.inholland.konradfigura.finalassignment.Model.Exceptions.BookNotFoundException;
 import nl.inholland.konradfigura.finalassignment.Model.Exceptions.OvertimeException;
-import nl.inholland.konradfigura.finalassignment.Model.Exceptions.UserNotFoundException;
+import nl.inholland.konradfigura.finalassignment.Model.Exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.Model.LibraryItem;
+import nl.inholland.konradfigura.finalassignment.Model.Member;
 import nl.inholland.konradfigura.finalassignment.Model.User;
 import nl.inholland.konradfigura.finalassignment.Model.UserLoadable;
 
-import javax.swing.*;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Dashboard implements Initializable, UserLoadable {
@@ -77,9 +76,6 @@ public class Dashboard implements Initializable, UserLoadable {
     private Label lblErrorAddMember;
 
     @FXML
-    private PasswordField pwdNewMemberPassword;
-
-    @FXML
     private Button btnAddMember;
 
     // COLLECTION
@@ -113,16 +109,13 @@ public class Dashboard implements Initializable, UserLoadable {
     @FXML
     private Label lblReceiveError;
 
-    @FXML
-    private TextField txtItemSearch;
-
 
     // VARIABLES.
     private final String GOOD_LABEL_CLASS = "good-label";
     private final String ERROR_LABEL_CLASS = "error-label";
 
-    private User currentUser;
-    private User editingUser;
+    private User currentMember;
+    private Member editingMember;
     private boolean editUserMode;
 
     private LibraryItem editingItem;
@@ -169,25 +162,30 @@ public class Dashboard implements Initializable, UserLoadable {
     }
 
     public void loadUser(User user) {
-        this.currentUser = user;
-        lblWelcome.setText(String.format("Welcome %s", currentUser.getFirstName()));
+        this.currentMember = user;
+        lblWelcome.setText(String.format("Welcome %s", currentMember.getUsername()));
     }
 
     private void loadTableMembers() {
         tblMembers.getItems().clear();
-        tblMembers.getItems().addAll(HelloApplication.getDatabase().getAll());
+        List<Member> members = HelloApplication.getMembers().getAll();
+        if (members.size() > 0) {
+            tblMembers.getItems().addAll(members);
+        }
     }
 
     private void loadTableItems() {
         tblItems.getItems().clear();
-        tblItems.getItems().addAll(HelloApplication.getLibrary().getAll());
+        List<LibraryItem> items = HelloApplication.getLibrary().getAll();
+        if (items.size() > 0) {
+            tblItems.getItems().addAll(items);
+        }
     }
 
     @FXML
     protected void onAddMemberOpenMenuClick(ActionEvent event) {
         txtNewMemberFirstName.setText("");
         txtNewMemberLastName.setText("");
-        pwdNewMemberPassword.setText("");
         lblErrorAddItem.setText("");
         dpNewMemberBirthdate.setValue(LocalDate.now());
         btnAddMember.setText("Add member");
@@ -201,15 +199,14 @@ public class Dashboard implements Initializable, UserLoadable {
         if (tblMembers.getSelectionModel().getSelectedItem() == null) {
             return;
         }
-        editingUser = (User)tblMembers.getSelectionModel().getSelectedItem();
+        editingMember = (Member)tblMembers.getSelectionModel().getSelectedItem();
 
         btnAddMember.setText("Edit member");
         editUserMode = true;
 
-        txtNewMemberFirstName.setText(editingUser.getFirstName());
-        txtNewMemberLastName.setText(editingUser.getLastName());
-        pwdNewMemberPassword.setText(editingUser.getPassword());
-        dpNewMemberBirthdate.setValue(editingUser.getBirthdate());
+        txtNewMemberFirstName.setText(editingMember.getFirstName());
+        txtNewMemberLastName.setText(editingMember.getLastName());
+        dpNewMemberBirthdate.setValue(editingMember.getBirthdate());
         lblErrorAddItem.setText("");
 
         paneAddMember.setVisible(true);
@@ -237,55 +234,43 @@ public class Dashboard implements Initializable, UserLoadable {
 
     @FXML
     protected void onAddMemberClick(ActionEvent event) {
-        root.requestFocus();
-
         lblErrorAddMember.setText("");
 
         String firstName = txtNewMemberFirstName.getText();
         String lastName = txtNewMemberLastName.getText();
-        String password = pwdNewMemberPassword.getText();
         LocalDate birthdate = dpNewMemberBirthdate.getValue();
 
         try {
             if (editUserMode) {
-                HelloApplication.getDatabase().editUser(editingUser, firstName, lastName, password, birthdate);
+                HelloApplication.getMembers().editUser(editingMember, firstName, lastName, birthdate);
             } else {
-                HelloApplication.getDatabase().add(firstName, lastName, birthdate, password);
+                HelloApplication.getMembers().add(firstName, lastName, birthdate);
             }
+
+            loadTableMembers();
+            paneAddMember.setVisible(false);
         }
-        catch (UserNotFoundException ex) {
+        catch (MemberNotFoundException ex) {
             lblErrorAddMember.setText(ex.getMessage());
         }
         catch (IllegalArgumentException ex) {
             lblErrorAddMember.setText(ex.getMessage());
         }
-
-        loadTableMembers();
-        paneAddMember.setVisible(false);
     }
 
     @FXML
     protected void onDeleteMember(ActionEvent event) {
-        User selectedPerson = (User)tblMembers.getSelectionModel().getSelectedItem();
+        Member selectedPerson = (Member)tblMembers.getSelectionModel().getSelectedItem();
 
         if (selectedPerson == null) {
             return;
         }
 
-        if (selectedPerson == currentUser) {
-            // TODO: Move that to UserDatabase.
-            Alert a = new Alert(Alert.AlertType.INFORMATION);
-            a.setTitle("Oops!");
-            a.setHeaderText("Cannot remove self, dummy.");
-            a.show();
-            return;
-        }
-
         try {
-            HelloApplication.getDatabase().delete(selectedPerson);
+            HelloApplication.getMembers().delete(selectedPerson);
             loadTableMembers();
         }
-        catch (UserNotFoundException ex) {
+        catch (MemberNotFoundException ex) {
             // TODO: Add this.
         }
     }
@@ -325,12 +310,12 @@ public class Dashboard implements Initializable, UserLoadable {
         LibraryItem book = HelloApplication.getLibrary().getById(bookCode);
 
         try {
-            User user = HelloApplication.getDatabase().getById(lenderCode);
-            HelloApplication.getLibrary().lendBook(book, user, LocalDate.now());
+            Member member = HelloApplication.getMembers().getById(lenderCode);
+            HelloApplication.getLibrary().lendBook(book, member, LocalDate.now());
 
             setLabelGreen(lblLendError);
             lblLendError.setText(String.format("Book %s [%d] has been borrowed to member %s",
-                    book.getTitle(), book.getId(), user.getFirstName()));
+                    book.getTitle(), book.getId(), member.getFirstName()));
             txtLendItemCode.setText("");
             txtLendMemberId.setText("");
         }
@@ -377,7 +362,7 @@ public class Dashboard implements Initializable, UserLoadable {
             lblReceiveError.setText("Book not found.");
         }
         catch (OvertimeException ex) {
-            lblReceiveError.setText("Book was returned after more than 3 weeks!");
+            lblReceiveError.setText(ex.getMessage());
         }
         catch (NullPointerException ex) {
             lblReceiveError.setText("Book is not borrowed.");

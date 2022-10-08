@@ -3,21 +3,34 @@ package nl.inholland.konradfigura.finalassignment.Database;
 import javafx.scene.control.Alert;
 import nl.inholland.konradfigura.finalassignment.Model.Exceptions.BookNotAvailableException;
 import nl.inholland.konradfigura.finalassignment.Model.Exceptions.BookNotFoundException;
-import nl.inholland.konradfigura.finalassignment.Model.Exceptions.UserNotFoundException;
+import nl.inholland.konradfigura.finalassignment.Model.Exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.Model.LendInfo;
 import nl.inholland.konradfigura.finalassignment.Model.LibraryItem;
 import nl.inholland.konradfigura.finalassignment.Model.Exceptions.OvertimeException;
-import nl.inholland.konradfigura.finalassignment.Model.User;
+import nl.inholland.konradfigura.finalassignment.Model.Member;
 
-import java.io.FileNotFoundException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryDatabase extends Database<LibraryItem> {
-    private final int OVERTIME_DAYS = 21;
+    public final int OVERTIME_DAYS = 21;
 
     public LibraryDatabase() {
+        super("library.db");
+        try {
+            this.list = read();
+        }
+        catch (Exception ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Error");
+            a.setHeaderText("Unable to load library database file.");
+        }
+    }
+
+    public LibraryDatabase(String databaseFile) {
+        super(databaseFile);
         try {
             this.list = read();
         }
@@ -58,11 +71,6 @@ public class LibraryDatabase extends Database<LibraryItem> {
     }
 
     @Override
-    public String getDatabaseFile() {
-        return "library.db";
-    }
-
-    @Override
     protected int generateId() {
         if (list == null || list.size() == 0) {
             return 1;
@@ -88,8 +96,8 @@ public class LibraryDatabase extends Database<LibraryItem> {
         return null;
     }
 
-    public void lendBook(LibraryItem book, User member, LocalDate date)
-            throws BookNotFoundException, UserNotFoundException, BookNotAvailableException {
+    public void lendBook(LibraryItem book, Member member, LocalDate date)
+            throws BookNotFoundException, MemberNotFoundException, BookNotAvailableException {
         final int index = getItemPositonWithinList(book);
 
         if (index == -1) {
@@ -97,7 +105,7 @@ public class LibraryDatabase extends Database<LibraryItem> {
         }
 
         if (member == null) {
-            throw new UserNotFoundException("Member was not found.");
+            throw new MemberNotFoundException("Member was not found.");
         }
 
         if (!book.isAvailable()) {
@@ -122,7 +130,8 @@ public class LibraryDatabase extends Database<LibraryItem> {
 
         final LocalDate lendDatePlusOvertime = info.date().plusDays(OVERTIME_DAYS);
         if (LocalDate.now().isAfter(lendDatePlusOvertime)) {
-            throw new OvertimeException("Book was returned too late.");
+            long days = Duration.between(lendDatePlusOvertime.atStartOfDay(), LocalDate.now().atStartOfDay()).toDays();
+            throw new OvertimeException(String.format("Book was returned %d days overtime.", days));
         }
     }
 

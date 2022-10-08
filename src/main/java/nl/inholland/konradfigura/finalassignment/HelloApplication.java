@@ -7,7 +7,9 @@ import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import nl.inholland.konradfigura.finalassignment.Database.Database;
 import nl.inholland.konradfigura.finalassignment.Database.LibraryDatabase;
+import nl.inholland.konradfigura.finalassignment.Database.MemberDatabase;
 import nl.inholland.konradfigura.finalassignment.Database.UserDatabase;
 import nl.inholland.konradfigura.finalassignment.Model.User;
 import nl.inholland.konradfigura.finalassignment.Model.UserLoadable;
@@ -18,15 +20,19 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     private static Stage stage;
 
-    private static UserDatabase db;
-    private static LibraryDatabase library;
+    private static Database[] databases;
 
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this::onCloseHandler);
-        db = new UserDatabase();
-        library = new LibraryDatabase();
+
+        databases = new Database[] {
+            new UserDatabase(),
+            new MemberDatabase(),
+            new LibraryDatabase()
+        };
+
         loadView(Views.LOGIN);
     }
 
@@ -62,19 +68,24 @@ public class HelloApplication extends Application {
         stage.setY(rect.getMinY() + (rect.getHeight() - stage.getHeight()) / 2);
     }
 
-    public static UserDatabase getDatabase() {
-        return db;
-    }
-
     private void onCloseHandler(WindowEvent event) {
         try {
-            db.write();
-            library.write();
+            for (Database db : databases) {
+                db.write();
+            };
         }
         catch (Exception ex ){ }
     }
 
-    public static LibraryDatabase getLibrary() { return library; }
+    public static UserDatabase getUsers() {
+        return (UserDatabase)databases[0];
+    }
+
+    public static MemberDatabase getMembers() {
+        return (MemberDatabase)databases[1];
+    }
+
+    public static LibraryDatabase getLibrary() { return (LibraryDatabase)databases[2]; }
 
     /**
      * Returns the screen, on which currently is mouse.

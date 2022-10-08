@@ -47,7 +47,7 @@ public class LibraryItem implements Serializable {
         return isAvailable() ? "Yes" : "No";
     }
 
-    public void lend(User lender, LocalDate date) {
+    public void lend(Member lender, LocalDate date) {
         lendInfo = new LendInfo(lender, date);
     }
 

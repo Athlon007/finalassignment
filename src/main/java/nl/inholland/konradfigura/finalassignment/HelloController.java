@@ -6,7 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import nl.inholland.konradfigura.finalassignment.Database.Database;
 import nl.inholland.konradfigura.finalassignment.Model.User;
 
 public class HelloController {
@@ -26,7 +25,7 @@ public class HelloController {
     }
 
     private void login() {
-        User user = HelloApplication.getDatabase().getUser(txtUsername.getText(), txtPassword.getText());
+        User user = HelloApplication.getUsers().getUser(txtUsername.getText(), txtPassword.getText());
 
         if (user == null) {
             setWarningText("User does not exist, or password is incorrect.");
@@ -39,7 +38,6 @@ public class HelloController {
         catch (Exception exception) {
             setWarningText("Something went wrong while loading the dashboard.");
             exception.printStackTrace();
-            // TODO: Add error logger.
         }
     }
 

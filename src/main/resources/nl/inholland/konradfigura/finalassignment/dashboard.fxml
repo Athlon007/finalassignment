@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -51,8 +50,7 @@
                                  <children>
                                     <TextField fx:id="txtNewMemberFirstName" layoutX="14.0" layoutY="14.0" prefHeight="30.0" prefWidth="277.0" promptText="First name" />
                                     <TextField fx:id="txtNewMemberLastName" layoutX="14.0" layoutY="56.0" prefHeight="30.0" prefWidth="277.0" promptText="Last name" />
-                                    <PasswordField fx:id="pwdNewMemberPassword" layoutX="316.0" layoutY="14.0" prefHeight="30.0" prefWidth="277.0" promptText="Password" />
-                                    <DatePicker fx:id="dpNewMemberBirthdate" editable="false" layoutX="315.0" layoutY="56.0" prefHeight="30.0" prefWidth="279.0" promptText="Birth date" />
+                                    <DatePicker fx:id="dpNewMemberBirthdate" editable="false" layoutX="316.0" layoutY="14.0" prefHeight="30.0" prefWidth="279.0" promptText="Birth date (dd/mm/yyyy)" />
                                     <Label fx:id="lblErrorAddMember" layoutX="14.0" layoutY="98.0" styleClass="error-label" text="wow, many issues" />
                                  </children>
                               </AnchorPane>
@@ -132,7 +130,7 @@
                                  </children></AnchorPane>
                           </items>
                         </SplitPane>
-                        <Label fx:id="lblWelcome" layoutX="54.0" prefHeight="53.0" prefWidth="391.0" styleClass="header-category" text="Welcome [user name]" textFill="WHITE">
+                        <Label fx:id="lblWelcome" layoutX="54.0" prefHeight="53.0" prefWidth="391.0" styleClass="header-category" text="Welcome [member name]" textFill="WHITE">
                            <font>
                               <Font size="33.0" />
                            </font>

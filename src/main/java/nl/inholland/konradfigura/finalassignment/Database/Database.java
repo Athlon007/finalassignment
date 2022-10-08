@@ -1,7 +1,6 @@
 package nl.inholland.konradfigura.finalassignment.Database;
 
 import nl.inholland.konradfigura.finalassignment.Model.Exceptions.NotFoundException;
-import nl.inholland.konradfigura.finalassignment.Model.User;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -10,10 +9,16 @@ import java.util.List;
 public abstract class Database<Serializable> {
     private boolean hasUsersListBeenLoaded = false;
 
-    protected List<Serializable> list;
+    protected List<Serializable> list = new ArrayList<>();
 
     public abstract void add(Serializable obj);
     public abstract void delete(Serializable obj) throws NotFoundException;
+
+    private String databaseFile;
+
+    public Database(String databaseFile) {
+        this.databaseFile = databaseFile;
+    }
     public List<Serializable> getAll() {
         return list;
     }
@@ -56,12 +61,6 @@ public abstract class Database<Serializable> {
     }
 
     /**
-     * This database's file name. MUST be overwritten.
-     * @return
-     */
-    public abstract String getDatabaseFile();
-
-    /**
      * Generates new item ID.
      * @return
      */
@@ -79,4 +78,6 @@ public abstract class Database<Serializable> {
     }
 
     public abstract Serializable getById(int id);
+
+    public String getDatabaseFile() { return databaseFile; }
 }
