@@ -206,9 +206,11 @@ public class Dashboard implements Initializable, UserLoadable {
     @FXML
     protected void onEditMemberOpenMenuClick() {
         if (tblMembers.getSelectionModel().getSelectedItem() == null) {
+            lblMembersError.setText("Select member to edit first.");
             return;
         }
         editingMember = tblMembers.getSelectionModel().getSelectedItem();
+        lblMembersError.setText("");
 
         btnAddMember.setText("Edit member");
         editUserMode = true;
@@ -269,8 +271,10 @@ public class Dashboard implements Initializable, UserLoadable {
         Member selectedPerson = tblMembers.getSelectionModel().getSelectedItem();
 
         if (selectedPerson == null) {
+            lblMembersError.setText("Select member to delete first.");
             return;
         }
+        lblMembersError.setText("");
 
         try {
             HelloApplication.getMembers().delete(selectedPerson);
@@ -397,8 +401,10 @@ public class Dashboard implements Initializable, UserLoadable {
         lblErrorAddItem.setText("");
 
         if (item == null) {
+            lblCollectionError.setText("Select item to edit first.");
             return;
         }
+        lblCollectionError.setText("");
 
         editingItem = item;
         editItemMode = true;
@@ -414,8 +420,10 @@ public class Dashboard implements Initializable, UserLoadable {
     private void onDeleteItemClick() {
         LibraryItem item = tblItems.getSelectionModel().getSelectedItem();
         if (item == null) {
+            lblCollectionError.setText("Select item to delete first.");
             return;
         }
+        lblCollectionError.setText("");
 
         try {
             HelloApplication.getLibrary().delete(item);
@@ -424,7 +432,7 @@ public class Dashboard implements Initializable, UserLoadable {
             lblCollectionError.setText(ex.getMessage());
         }
     }
-
+    
     @FXML
     private void onSearchTyped(ActionEvent event) {
         String query = ((TextField)event.getSource()).getText();
