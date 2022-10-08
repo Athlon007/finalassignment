@@ -1,8 +1,8 @@
-package nl.inholland.konradfigura.finalassignment.Database;
+package nl.inholland.konradfigura.finalassignment.database;
 
 import javafx.scene.control.Alert;
-import nl.inholland.konradfigura.finalassignment.Model.Exceptions.MemberNotFoundException;
-import nl.inholland.konradfigura.finalassignment.Model.Member;
+import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
+import nl.inholland.konradfigura.finalassignment.model.Member;
 
 import java.time.LocalDate;
 

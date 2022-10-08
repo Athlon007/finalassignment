@@ -6,17 +6,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import nl.inholland.konradfigura.finalassignment.Model.Exceptions.BookNotFoundException;
-import nl.inholland.konradfigura.finalassignment.Model.Exceptions.OvertimeException;
-import nl.inholland.konradfigura.finalassignment.Model.Exceptions.MemberNotFoundException;
-import nl.inholland.konradfigura.finalassignment.Model.LibraryItem;
-import nl.inholland.konradfigura.finalassignment.Model.Member;
-import nl.inholland.konradfigura.finalassignment.Model.User;
-import nl.inholland.konradfigura.finalassignment.Model.UserLoadable;
+import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundException;
+import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
+import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
+import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
+import nl.inholland.konradfigura.finalassignment.model.Member;
+import nl.inholland.konradfigura.finalassignment.model.User;
+import nl.inholland.konradfigura.finalassignment.model.UserLoadable;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 

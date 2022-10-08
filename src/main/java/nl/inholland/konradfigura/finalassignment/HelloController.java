@@ -6,7 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import nl.inholland.konradfigura.finalassignment.Model.User;
+import nl.inholland.konradfigura.finalassignment.model.User;
 
 public class HelloController {
 

@@ -7,12 +7,12 @@ import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import nl.inholland.konradfigura.finalassignment.Database.Database;
-import nl.inholland.konradfigura.finalassignment.Database.LibraryDatabase;
-import nl.inholland.konradfigura.finalassignment.Database.MemberDatabase;
-import nl.inholland.konradfigura.finalassignment.Database.UserDatabase;
-import nl.inholland.konradfigura.finalassignment.Model.User;
-import nl.inholland.konradfigura.finalassignment.Model.UserLoadable;
+import nl.inholland.konradfigura.finalassignment.database.Database;
+import nl.inholland.konradfigura.finalassignment.database.LibraryDatabase;
+import nl.inholland.konradfigura.finalassignment.database.MemberDatabase;
+import nl.inholland.konradfigura.finalassignment.database.UserDatabase;
+import nl.inholland.konradfigura.finalassignment.model.User;
+import nl.inholland.konradfigura.finalassignment.model.UserLoadable;
 
 import java.awt.*;
 import java.io.IOException;

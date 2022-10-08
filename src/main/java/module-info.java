@@ -5,7 +5,8 @@ module nl.inholland.konradfigura.finalassignment {
 
 
     opens nl.inholland.konradfigura.finalassignment to javafx.fxml;
-    exports nl.inholland.konradfigura.finalassignment.Database;
-    exports nl.inholland.konradfigura.finalassignment.Model;
-    exports nl.inholland.konradfigura.finalassignment.Model.Exceptions;
+    exports nl.inholland.konradfigura.finalassignment;
+    exports nl.inholland.konradfigura.finalassignment.database;
+    exports nl.inholland.konradfigura.finalassignment.model;
+    exports nl.inholland.konradfigura.finalassignment.model.exceptions;
 }

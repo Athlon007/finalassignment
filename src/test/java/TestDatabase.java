@@ -1,14 +1,10 @@
-import junit.framework.Assert;
-import nl.inholland.konradfigura.finalassignment.Database.LibraryDatabase;
-import nl.inholland.konradfigura.finalassignment.Database.MemberDatabase;
-import nl.inholland.konradfigura.finalassignment.Database.UserDatabase;
-import nl.inholland.konradfigura.finalassignment.Model.Exceptions.BookNotAvailableException;
-import nl.inholland.konradfigura.finalassignment.Model.Exceptions.BookNotFoundException;
-import nl.inholland.konradfigura.finalassignment.Model.Exceptions.MemberNotFoundException;
-import nl.inholland.konradfigura.finalassignment.Model.Exceptions.OvertimeException;
-import nl.inholland.konradfigura.finalassignment.Model.LibraryItem;
-import nl.inholland.konradfigura.finalassignment.Model.Member;
-import nl.inholland.konradfigura.finalassignment.Model.User;
+import nl.inholland.konradfigura.finalassignment.database.LibraryDatabase;
+import nl.inholland.konradfigura.finalassignment.database.MemberDatabase;
+import nl.inholland.konradfigura.finalassignment.database.UserDatabase;
+import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
+import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
+import nl.inholland.konradfigura.finalassignment.model.Member;
+import nl.inholland.konradfigura.finalassignment.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -16,26 +12,26 @@ import java.io.File;
 import java.time.Duration;
 import java.time.LocalDate;
 
-public class TestDatabase {
-    private final String LIBRARY_TEST_FILE = "testlib.db";
-    private final String USER_TEST_FILE = "testusr.db";
-    private final String MEMBER_TEST_FILE = "testmem.db";
+class TestDatabase {
 
-    private LibraryDatabase dbLibrary;
-    private UserDatabase dbUsers;
-    private MemberDatabase dbMembers;
+    private final LibraryDatabase dbLibrary;
+    private final UserDatabase dbUsers;
+    private final MemberDatabase dbMembers;
 
     public TestDatabase() {
+        String LIBRARY_TEST_FILE = "testlib.db";
         File libFile = new File(LIBRARY_TEST_FILE);
         if (libFile.exists()) {
             libFile.delete();
         }
 
+        String USER_TEST_FILE = "testusr.db";
         File usrFile = new File(USER_TEST_FILE);
         if (usrFile.exists()) {
             usrFile.delete();
         }
 
+        String MEMBER_TEST_FILE = "testmem.db";
         File memFile = new File(MEMBER_TEST_FILE);
         if (memFile.exists()) {
             memFile.delete();
@@ -46,7 +42,7 @@ public class TestDatabase {
         dbUsers = new UserDatabase(USER_TEST_FILE);
     }
     @Test
-    public void testOvertimeBookReturn() {
+    void testOvertimeBookReturn() {
         LocalDate today = LocalDate.now();
         LocalDate lendDay = LocalDate.of(2022, 9, 1);
         long days = Duration.between(lendDay.atStartOfDay(), today.atStartOfDay()).toDays() - dbLibrary.OVERTIME_DAYS;
@@ -69,10 +65,12 @@ public class TestDatabase {
     }
 
     @Test
-    public void testUserLogin() {
+    void testUserLogin() {
         String username = "user";
         String password = "password";
-        dbUsers.add(username, password);
+        try {
+            dbUsers.add(username, password);
+        } catch (Exception e) {}
 
         User user = dbUsers.getUser(username, password);
         Assertions.assertEquals("user", user.getUsername());
@@ -81,4 +79,17 @@ public class TestDatabase {
             dbUsers.delete(user);
         } catch (Exception e) {}
     }
+
+    /*
+    @Test
+    public void testIdGenerations() throws BookNotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        dbLibrary.add("Book", "Author");
+        LibraryItem book = dbLibrary.getById(1);
+        Method method = LibraryDatabase.class.getDeclaredMethod("generateId");
+        method.setAccessible(true);
+        int output = (int) method.invoke(dbLibrary, null);
+        Assertions.assertEquals(1, output);
+        dbLibrary.delete(book);
+    }
+     */
 }

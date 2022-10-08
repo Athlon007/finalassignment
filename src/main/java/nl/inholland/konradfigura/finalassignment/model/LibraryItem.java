@@ -1,4 +1,4 @@
-package nl.inholland.konradfigura.finalassignment.Model;
+package nl.inholland.konradfigura.finalassignment.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;

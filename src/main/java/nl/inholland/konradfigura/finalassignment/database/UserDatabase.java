@@ -1,8 +1,9 @@
-package nl.inholland.konradfigura.finalassignment.Database;
+package nl.inholland.konradfigura.finalassignment.database;
 
 import javafx.scene.control.Alert;
-import nl.inholland.konradfigura.finalassignment.Model.Exceptions.MemberNotFoundException;
-import nl.inholland.konradfigura.finalassignment.Model.User;
+import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
+import nl.inholland.konradfigura.finalassignment.model.exceptions.UserAlreadyExists;
+import nl.inholland.konradfigura.finalassignment.model.User;
 
 public class UserDatabase extends Database<User>  {
 
@@ -17,7 +18,9 @@ public class UserDatabase extends Database<User>  {
             a.setHeaderText("Unable to load database file.");
         }
 
-        createUsers();
+        if (list.size() == 0) {
+            createUsers();
+        }
     }
 
     public UserDatabase(String databaseFile) {
@@ -35,14 +38,17 @@ public class UserDatabase extends Database<User>  {
     private void createUsers() {
         // FOR DEBUG PURPOSES ONLY!
         // If the database gets loaded as empty (ex. file got corrupted, a dummy account will always be created).
-        if (list.size() == 0) {
-            add("user1", "password");
-            add("user2", "hello");
-            User user = list.get(0);
-            User user2 = list.get(1);
-            System.out.println(String.format("A dummy account has been added.\nLogin: %s\nPassword: %s", user.getUsername(), user.getPassword()));
-            System.out.println(String.format("A dummy account has been added.\nLogin: %s\nPassword: %s", user2.getUsername(), user2.getPassword()));
+
+        try {
+            add("James", "password");
+            add("Gordon", "hello");
+        } catch (Exception e) {
+            System.out.print("Wait, how did this happen?");
         }
+        User user = list.get(0);
+        User user2 = list.get(1);
+        System.out.println(String.format("A dummy account has been added.\nLogin: %s\nPassword: %s", user.getUsername(), user.getPassword()));
+        System.out.println(String.format("A dummy account has been added.\nLogin: %s\nPassword: %s", user2.getUsername(), user2.getPassword()));
     }
 
     @Override
@@ -50,9 +56,22 @@ public class UserDatabase extends Database<User>  {
         list.add(member);
     }
 
-    public void add(String username, String password) throws IllegalArgumentException {
+    public void add(String username, String password) throws IllegalArgumentException, UserAlreadyExists {
+        if (existsUser(username)) {
+            throw new UserAlreadyExists("Username with nickname " + username + " already exists.");
+        }
         User user = new User(generateId(), username, password);
         add(user);
+    }
+
+    private boolean existsUser(String username) {
+        for (User user : list) {
+            if (user.getUsername().toUpperCase() == username.toUpperCase()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public User getUser(String username, String password) {
