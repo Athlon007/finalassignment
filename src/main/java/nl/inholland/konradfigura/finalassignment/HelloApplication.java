@@ -23,7 +23,7 @@ public class HelloApplication extends Application {
     private static Database[] databases;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         HelloApplication.stage = stage;
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this::onCloseHandler);
 
@@ -33,7 +33,11 @@ public class HelloApplication extends Application {
                 new LibraryDatabase()
         };
 
-        loadView(Views.LOGIN);
+        try {
+            loadView(Views.LOGIN);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void main(String[] args) {
