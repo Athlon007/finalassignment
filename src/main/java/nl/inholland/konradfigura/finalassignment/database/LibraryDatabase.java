@@ -168,4 +168,14 @@ public class LibraryDatabase extends Database<LibraryItem> {
         }
         return result;
     }
+
+    public boolean isMemberBorrowingBook(Member member) throws NullPointerException {
+        for (LibraryItem li : list) {
+            if (li.getLendingUser().equals(member)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

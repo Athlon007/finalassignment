@@ -275,6 +275,12 @@ public class Dashboard implements Initializable, UserLoadable {
             lblMembersError.setText("Select member to delete first.");
             return;
         }
+
+        if (HelloApplication.getLibrary().isMemberBorrowingBook(selectedPerson)) {
+            lblMembersError.setText("Can't delete member: Member has borrowed a book.");
+            return;
+        }
+
         lblMembersError.setText("");
 
         try {
