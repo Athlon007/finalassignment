@@ -1,13 +1,12 @@
 package nl.inholland.konradfigura.finalassignment.database;
 
-import javafx.scene.control.Alert;
+import nl.inholland.konradfigura.finalassignment.model.LendInfo;
+import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
+import nl.inholland.konradfigura.finalassignment.model.Member;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotAvailableException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
-import nl.inholland.konradfigura.finalassignment.model.LendInfo;
-import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
-import nl.inholland.konradfigura.finalassignment.model.Member;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -19,26 +18,10 @@ public class LibraryDatabase extends Database<LibraryItem> {
 
     public LibraryDatabase() {
         super("library.db");
-        try {
-            this.list = read();
-        }
-        catch (Exception ex) {
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Error");
-            a.setHeaderText("Unable to load library database file.");
-        }
     }
 
     public LibraryDatabase(String databaseFile) {
         super(databaseFile);
-        try {
-            this.list = read();
-        }
-        catch (Exception ex) {
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Error");
-            a.setHeaderText("Unable to load library database file.");
-        }
     }
 
     public void add(String title, String author) throws NullPointerException {
@@ -152,7 +135,7 @@ public class LibraryDatabase extends Database<LibraryItem> {
             throw new BookNotAvailableException("Book has been lent, and can't be edited or deleted.");
         }
 
-        int index = getItemPositionWithinList(book);
+        final int index = getItemPositionWithinList(book);
         book.setTitle(title);
         book.setAuthor(author);
         list.set(index, book);

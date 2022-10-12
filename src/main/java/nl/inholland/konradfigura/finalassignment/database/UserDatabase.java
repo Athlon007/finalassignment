@@ -1,6 +1,5 @@
 package nl.inholland.konradfigura.finalassignment.database;
 
-import javafx.scene.control.Alert;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.UserAlreadyExists;
 import nl.inholland.konradfigura.finalassignment.model.User;
@@ -9,14 +8,6 @@ public class UserDatabase extends Database<User>  {
 
     public UserDatabase() {
         super("users.db");
-        try {
-            this.list = read();
-        }
-        catch (Exception ex) {
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Error");
-            a.setHeaderText("Unable to load database file.");
-        }
 
         if (list.isEmpty()) {
             createUsers();
@@ -25,14 +16,6 @@ public class UserDatabase extends Database<User>  {
 
     public UserDatabase(String databaseFile) {
         super(databaseFile);
-        try {
-            this.list = read();
-        }
-        catch (Exception ex) {
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Error");
-            a.setHeaderText("Unable to load database file.");
-        }
     }
 
     private void createUsers() {

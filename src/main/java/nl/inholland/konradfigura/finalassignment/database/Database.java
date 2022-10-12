@@ -16,6 +16,7 @@ public abstract class Database<Serializable> {
 
     protected Database(String databaseFile) {
         this.databaseFile = databaseFile;
+        this.list = read();
     }
     public List<Serializable> getAll() {
         return list;
@@ -24,12 +25,14 @@ public abstract class Database<Serializable> {
     /**
      * Reads database from the DATABASE_FILE.
      */
-    protected List<Serializable> read() throws IOException, ClassNotFoundException {
+    protected List<Serializable> read() {
         List<Serializable> output = new ArrayList<>();
-        File f = new File(getDatabaseFile());
+        final File f = new File(getDatabaseFile());
         if (f.exists() && !f.isDirectory()) {
             try (FileInputStream fis = new FileInputStream(f); ObjectInputStream ois = new ObjectInputStream(fis)) {
                 output = (List<Serializable>) ois.readObject();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
 

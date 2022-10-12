@@ -1,6 +1,5 @@
 package nl.inholland.konradfigura.finalassignment.database;
 
-import javafx.scene.control.Alert;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.Member;
 
@@ -9,26 +8,10 @@ import java.time.LocalDate;
 public class MemberDatabase extends Database<Member>  {
     public MemberDatabase() {
         super("members.db");
-        try {
-            this.list = read();
-        }
-        catch (Exception ex) {
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Error");
-            a.setHeaderText("Unable to load database file.");
-        }
     }
 
     public MemberDatabase(String databaseFile) {
         super(databaseFile);
-        try {
-            this.list = read();
-        }
-        catch (Exception ex) {
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Error");
-            a.setHeaderText("Unable to load database file.");
-        }
     }
 
     @Override
