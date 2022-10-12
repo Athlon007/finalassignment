@@ -81,10 +81,9 @@ public class LibraryDatabase extends Database<LibraryItem> {
 
     public void lendBook(LibraryItem book, Member member, LocalDate date)
             throws BookNotFoundException, MemberNotFoundException, BookNotAvailableException {
-        final int index = getItemPositionWithinList(book);
 
-        if (index == -1) {
-            throw new BookNotFoundException("Unable to find the book with such ID.");
+        if (!list.contains(book)) {
+            throw new BookNotFoundException("Book is not registered in the database.");
         }
 
         if (member == null) {
@@ -96,13 +95,11 @@ public class LibraryDatabase extends Database<LibraryItem> {
         }
 
         book.lend(member, date);
-        list.set(index, book);
     }
 
     public void returnBook(LibraryItem book) throws BookNotFoundException, OvertimeException, NullPointerException {
-        final int index = getItemPositionWithinList(book);
-        if (index == -1) {
-            throw new BookNotFoundException("Unable to find the book with such ID.");
+        if (!list.contains(book)) {
+            throw new BookNotFoundException("Book is not registered in the database.");
         }
 
         final LendInfo info = book.returnItem();
@@ -135,10 +132,8 @@ public class LibraryDatabase extends Database<LibraryItem> {
             throw new BookNotAvailableException("Book has been lent, and can't be edited or deleted.");
         }
 
-        final int index = getItemPositionWithinList(book);
         book.setTitle(title);
         book.setAuthor(author);
-        list.set(index, book);
     }
 
     public List<LibraryItem> getAll(String query) {

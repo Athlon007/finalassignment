@@ -53,17 +53,6 @@ public abstract class Database<Serializable> {
      */
     protected abstract int generateId();
 
-    protected int getItemPositionWithinList(Serializable obj) {
-        int i = 0;
-        for (Serializable entry : list) {
-            if (entry == obj) {
-                return i;
-            }
-            i++;
-        }
-        return -1;
-    }
-
     public abstract Serializable getById(int id);
 
     public String getDatabaseFile() { return databaseFile; }

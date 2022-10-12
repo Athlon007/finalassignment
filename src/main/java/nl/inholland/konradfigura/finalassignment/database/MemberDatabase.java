@@ -42,11 +42,9 @@ public class MemberDatabase extends Database<Member>  {
             throw new MemberNotFoundException(String.format("User '%s %s' was not found.", firstname, lastname));
         }
 
-        int index = getItemPositionWithinList(editingMember);
         editingMember.setFirstName(firstname);
         editingMember.setLastName(lastname);
         editingMember.setBirthdate(birthdate);
-        list.set(index, editingMember);
     }
 
     private void isInputValid(String firstname, String lastname, LocalDate birthdate) {
