@@ -79,17 +79,4 @@ class TestDatabase {
             dbUsers.delete(user);
         } catch (Exception e) {}
     }
-
-    /*
-    @Test
-    public void testIdGenerations() throws BookNotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        dbLibrary.add("Book", "Author");
-        LibraryItem book = dbLibrary.getById(1);
-        Method method = LibraryDatabase.class.getDeclaredMethod("generateId");
-        method.setAccessible(true);
-        int output = (int) method.invoke(dbLibrary, null);
-        Assertions.assertEquals(1, output);
-        dbLibrary.delete(book);
-    }
-     */
 }

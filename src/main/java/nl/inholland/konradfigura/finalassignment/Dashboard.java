@@ -99,6 +99,7 @@ public class Dashboard implements Initializable {
                             lblLendError.setText("");
                             lblReceiveError.setText("");
                             break;
+                        default: break;
                     }
                 }
         );
