@@ -27,20 +27,16 @@ import java.util.ResourceBundle;
 public class Dashboard implements Initializable, UserLoadable {
     @FXML
     private TabPane tabContainer;
-
     @FXML
     private Label lblWelcome;
-
     @FXML
     private TableView<Member> tblMembers;
-
     @FXML
     private TableView<LibraryItem> tblItems;
-
     @FXML
     private TableColumn<LibraryItem, String> tblItemsAvailable;
 
-    // Add/Edit member pane
+    // ADD/EDIT MEMBER PANE
     @FXML
     private AnchorPane paneAddMember;
     @FXML
@@ -82,12 +78,10 @@ public class Dashboard implements Initializable, UserLoadable {
     @FXML
     private Label lblCollectionError;
 
-
     // VARIABLES.
     private static final String GOOD_LABEL_CLASS = "good-label";
     private static final String ERROR_LABEL_CLASS = "error-label";
     private Member editingMember;
-
     private LibraryItem editingItem;
 
     @Override
