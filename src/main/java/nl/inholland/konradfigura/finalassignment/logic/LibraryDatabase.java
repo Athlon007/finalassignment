@@ -94,6 +94,8 @@ public class LibraryDatabase extends Database<LibraryItem> {
             throw new BookNotAvailableException("Book is already borrowed.");
         }
 
+        date = LocalDate.of(2022, 9, 10);
+
         book.lend(member, date);
     }
 
