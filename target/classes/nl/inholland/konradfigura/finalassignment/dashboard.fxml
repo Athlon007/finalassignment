@@ -9,10 +9,12 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 <AnchorPane minHeight="494.0" minWidth="1118.0" prefHeight="574.0" prefWidth="870.0" styleClass="body-dashboard" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TabPane fx:id="tabContainer" layoutX="-1.0" layoutY="30.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="647.0" prefWidth="1118.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
@@ -28,24 +30,24 @@
                         </Label>
                         <TableView fx:id="tblMembers" layoutX="54.0" layoutY="53.0" prefHeight="372.0" prefWidth="1010.0" AnchorPane.bottomAnchor="73.0" AnchorPane.leftAnchor="54.0" AnchorPane.rightAnchor="54.0" AnchorPane.topAnchor="53.0">
                            <columns>
-                              <TableColumn prefWidth="124.0" text="Identifier" >
+                              <TableColumn prefWidth="124.0" text="Identifier">
                                  <cellValueFactory>
-                                    <PropertyValueFactory property="id"/>
+                                    <PropertyValueFactory property="id" />
                                  </cellValueFactory>
                               </TableColumn>
                               <TableColumn prefWidth="124.0" text="First name">
                                  <cellValueFactory>
-                                    <PropertyValueFactory property="firstName"/>
+                                    <PropertyValueFactory property="firstName" />
                                  </cellValueFactory>
                               </TableColumn>
                               <TableColumn prefWidth="386.0" text="Last name">
                                  <cellValueFactory>
-                                    <PropertyValueFactory property="lastName"/>
+                                    <PropertyValueFactory property="lastName" />
                                  </cellValueFactory>
                               </TableColumn>
                               <TableColumn prefWidth="376.0" text="Birth date">
                                  <cellValueFactory>
-                                    <PropertyValueFactory property="birthdate"/>
+                                    <PropertyValueFactory property="birthdate" />
                                  </cellValueFactory>
                               </TableColumn>
                            </columns>
@@ -93,18 +95,18 @@
                            <columns>
                             <TableColumn fx:id="tblItemsItemCode" prefWidth="124.0" text="Item Code">
                                <cellValueFactory>
-                                  <PropertyValueFactory property="id"/>
+                                  <PropertyValueFactory property="id" />
                                </cellValueFactory>
                             </TableColumn>
                             <TableColumn fx:id="tblItemsAvailable" prefWidth="124.0" text="Available" />
                               <TableColumn fx:id="tblItemsTitle" prefWidth="386.0" text="Title">
                                  <cellValueFactory>
-                                    <PropertyValueFactory property="title"/>
+                                    <PropertyValueFactory property="title" />
                                  </cellValueFactory>
                               </TableColumn>
                               <TableColumn fx:id="tblItemsAuthor" prefWidth="376.0" text="Author">
                                  <cellValueFactory>
-                                    <PropertyValueFactory property="author"/>
+                                    <PropertyValueFactory property="author" />
                                  </cellValueFactory>
                               </TableColumn>
                            </columns>
@@ -177,5 +179,10 @@
          </font>
       </Label>
       <Button layoutX="360.0" layoutY="30.0" mnemonicParsing="false" onAction="#onLogoutClick" styleClass="button-secondary" text="Logout" />
+      <ImageView fitHeight="53.0" fitWidth="79.0" layoutX="24.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@library.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

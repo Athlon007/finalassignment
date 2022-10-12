@@ -11,8 +11,6 @@ import nl.inholland.konradfigura.finalassignment.database.Database;
 import nl.inholland.konradfigura.finalassignment.database.LibraryDatabase;
 import nl.inholland.konradfigura.finalassignment.database.MemberDatabase;
 import nl.inholland.konradfigura.finalassignment.database.UserDatabase;
-import nl.inholland.konradfigura.finalassignment.model.User;
-import nl.inholland.konradfigura.finalassignment.model.UserLoadable;
 
 import java.awt.*;
 import java.io.IOException;

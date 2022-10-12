@@ -1,14 +1,11 @@
 package nl.inholland.konradfigura.finalassignment;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
@@ -16,15 +13,13 @@ import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFound
 import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
 import nl.inholland.konradfigura.finalassignment.model.Member;
 import nl.inholland.konradfigura.finalassignment.model.User;
-import nl.inholland.konradfigura.finalassignment.model.UserLoadable;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class Dashboard implements Initializable, UserLoadable {
+public class Dashboard implements Initializable {
     @FXML
     private TabPane tabContainer;
     @FXML
