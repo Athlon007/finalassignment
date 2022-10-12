@@ -1,6 +1,9 @@
 package nl.inholland.konradfigura.finalassignment;
 
-import javafx.beans.value.ObservableValueBase;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,7 +21,7 @@ import nl.inholland.konradfigura.finalassignment.model.UserLoadable;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class Dashboard implements Initializable, UserLoadable {
@@ -26,65 +29,34 @@ public class Dashboard implements Initializable, UserLoadable {
     private TabPane tabContainer;
 
     @FXML
-    private Tab tabLending;
-
-    @FXML
-    private Tab tabCollection;
-
-    @FXML
-    private Tab tabMembers;
-
-    @FXML
     private Label lblWelcome;
-
-    @FXML
-    private TableView<LibraryItem> tblItems;
 
     @FXML
     private TableView<Member> tblMembers;
 
     @FXML
-    private AnchorPane paneAddMember;
+    private TableView<LibraryItem> tblItems;
 
     @FXML
-    private AnchorPane paneAddItem;
+    private TableColumn<LibraryItem, String> tblItemsAvailable;
 
+    // Add/Edit member pane
+    @FXML
+    private AnchorPane paneAddMember;
     @FXML
     private TextField txtNewMemberFirstName;
-
     @FXML
     private TextField txtNewMemberLastName;
-
     @FXML
     private DatePicker dpNewMemberBirthdate;
-
-    @FXML
-    private TableColumn<Member, Integer> tblMembersId;
-
-    @FXML
-    private TableColumn<Member, String> tblMembersFirstName;
-
-    @FXML
-    private TableColumn<Member, String> tblMembersLastName;
-
-    @FXML
-    private TableColumn<Member, LocalDate> tblMembersBirthdate;
-
     @FXML
     private Label lblErrorAddMember;
-
     @FXML
     private Button btnAddMember;
 
     // COLLECTION
     @FXML
-    private TableColumn<LibraryItem, Integer> tblItemsItemCode;
-    @FXML
-    private TableColumn<LibraryItem, String> tblItemsAvailable;
-    @FXML
-    private TableColumn<LibraryItem, String> tblItemsTitle;
-    @FXML
-    private TableColumn<LibraryItem, String> tblItemsAuthor;
+    private AnchorPane paneAddItem;
     @FXML
     private TextField txtAddItemTitle;
     @FXML
@@ -101,12 +73,10 @@ public class Dashboard implements Initializable, UserLoadable {
     private TextField txtLendMemberId;
     @FXML
     private Label lblLendError;
-
     @FXML
     private TextField txtReceiveCode;
     @FXML
     private Label lblReceiveError;
-
     @FXML
     private Label lblMembersError;
     @FXML
@@ -117,59 +87,42 @@ public class Dashboard implements Initializable, UserLoadable {
     private static final String GOOD_LABEL_CLASS = "good-label";
     private static final String ERROR_LABEL_CLASS = "error-label";
     private Member editingMember;
-    private boolean editUserMode;
 
     private LibraryItem editingItem;
-    private boolean editItemMode;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Tab switching.
         tabContainer.getSelectionModel().selectedItemProperty().addListener(
                 (observableValue, oldTab, newTab) -> {
-                    if (newTab == tabMembers) {
-                        paneAddMember.setVisible(false);
-                        lblMembersError.setText("");
-                        loadTableMembers();
-                    }
-                    else if (newTab == tabCollection) {
-                        paneAddItem.setVisible(false);
-                        lblCollectionError.setText("");
-                        loadTableItems();
-                    }
-                    else if (newTab == tabLending) {
-                        lblLendError.setText("");
-                        lblReceiveError.setText("");
+                    switch (newTab.getId()) {
+                        case "tabMembers":
+                            paneAddMember.setVisible(false);
+                            lblMembersError.setText("");
+                            loadTableMembers();
+                            break;
+                        case "tabCollection":
+                            paneAddItem.setVisible(false);
+                            lblCollectionError.setText("");
+                            loadTableItems();
+                            break;
+                        case "tabLending":
+                            lblLendError.setText("");
+                            lblReceiveError.setText("");
+                            break;
                     }
                 }
         );
-        tabContainer.getSelectionModel().select(tabLending);
+        // Select last tab on load.
+        tabContainer.getSelectionModel().select(tabContainer.getTabs().size() - 1);
 
-        tblMembersId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        tblMembersFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        tblMembersLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tblMembersBirthdate.setCellValueFactory(new PropertyValueFactory<>("birthdate"));
-
-        tblItemsItemCode.setCellValueFactory(new PropertyValueFactory<>("id"));
-        tblItemsTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
-        tblItemsAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
-        tblItemsAvailable.setCellValueFactory(p -> new ObservableValueBase<>() {
-            @Override
-            public String getValue() {
-                return p.getValue().isAvailable() ? "Yes" : "No";
-            }
-        });
-
-        lblErrorAddMember.setText("");
+        // Set table columns Items
+        tblItemsAvailable.setCellValueFactory(s -> new SimpleStringProperty(s.getValue().isAvailable() ? "Yes" : "No"));
 
         // Prevent text boxes that cannot accept digits... to not accept digits.
-        txtLendItemCode.textProperty().addListener(new NoDigitTextFieldListener(txtLendItemCode));
-        txtLendMemberId.textProperty().addListener(new NoDigitTextFieldListener(txtLendMemberId));
-        txtReceiveCode.textProperty().addListener(new NoDigitTextFieldListener(txtReceiveCode));
-        lblLendError.setText("");
-        lblReceiveError.setText("");
-
-        lblMembersError.setText("");
-        lblCollectionError.setText("");
+        txtLendItemCode.textProperty().addListener(new OnlyDigitsTextFieldListener(txtLendItemCode));
+        txtLendMemberId.textProperty().addListener(new OnlyDigitsTextFieldListener(txtLendMemberId));
+        txtReceiveCode.textProperty().addListener(new OnlyDigitsTextFieldListener(txtReceiveCode));
     }
 
     public void loadUser(User user) {
@@ -178,18 +131,12 @@ public class Dashboard implements Initializable, UserLoadable {
 
     private void loadTableMembers() {
         tblMembers.getItems().clear();
-        List<Member> members = HelloApplication.getMembers().getAll();
-        if (!members.isEmpty()) {
-            tblMembers.getItems().addAll(members);
-        }
+        tblMembers.setItems(FXCollections.observableArrayList(HelloApplication.getMembers().getAll()));
     }
 
     private void loadTableItems() {
         tblItems.getItems().clear();
-        List<LibraryItem> items = HelloApplication.getLibrary().getAll();
-        if (!items.isEmpty()) {
-            tblItems.getItems().addAll(items);
-        }
+        tblItems.setItems(FXCollections.observableArrayList(HelloApplication.getLibrary().getAll()));
     }
 
     @FXML
@@ -199,7 +146,7 @@ public class Dashboard implements Initializable, UserLoadable {
         lblErrorAddItem.setText("");
         dpNewMemberBirthdate.setValue(LocalDate.now());
         btnAddMember.setText("Add member");
-        editUserMode = false;
+        editingMember = null;
 
         paneAddMember.setVisible(true);
     }
@@ -214,7 +161,6 @@ public class Dashboard implements Initializable, UserLoadable {
         lblMembersError.setText("");
 
         btnAddMember.setText("Edit member");
-        editUserMode = true;
 
         txtNewMemberFirstName.setText(editingMember.getFirstName());
         txtNewMemberLastName.setText(editingMember.getLastName());
@@ -233,7 +179,7 @@ public class Dashboard implements Initializable, UserLoadable {
     protected void onAddItemOpenMenuClick() {
         paneAddItem.setVisible(true);
         btnAddItem.setText("Add item");
-        editItemMode = false;
+        editingItem = null;
         txtAddItemTitle.setText("");
         txtAddItemAuthor.setText("");
         lblErrorAddItem.setText("");
@@ -253,7 +199,7 @@ public class Dashboard implements Initializable, UserLoadable {
         LocalDate birthdate = dpNewMemberBirthdate.getValue();
 
         try {
-            if (editUserMode) {
+            if (editingMember != null) {
                 HelloApplication.getMembers().editUser(editingMember, firstName, lastName, birthdate);
             } else {
                 HelloApplication.getMembers().add(firstName, lastName, birthdate);
@@ -298,7 +244,7 @@ public class Dashboard implements Initializable, UserLoadable {
         String author = txtAddItemAuthor.getText();
 
         try {
-            if (editItemMode) {
+            if (editingItem != null) {
                 HelloApplication.getLibrary().edit(editingItem, title, author);
             }
             else {
@@ -321,8 +267,8 @@ public class Dashboard implements Initializable, UserLoadable {
             return;
         }
 
-        int bookCode = Integer.parseInt(txtLendItemCode.getText());
-        int lenderCode = Integer.parseInt(txtLendMemberId.getText());
+        int bookCode = Integer.parseInt(bookCodeString);
+        int lenderCode = Integer.parseInt(lenderCodeString);
 
         LibraryItem book = HelloApplication.getLibrary().getById(bookCode);
 
@@ -335,8 +281,7 @@ public class Dashboard implements Initializable, UserLoadable {
                     book.getTitle(), book.getId(), member.getFirstName()));
             txtLendItemCode.setText("");
             txtLendMemberId.setText("");
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             lblLendError.setText(ex.getMessage());
         }
     }
@@ -374,14 +319,9 @@ public class Dashboard implements Initializable, UserLoadable {
             setLabelGreen(lblReceiveError);
             lblReceiveError.setText("Book has been returned!");
             txtReceiveCode.setText("");
-        }
-        catch (BookNotFoundException ex) {
-            lblReceiveError.setText("Book not found.");
-        }
-        catch (OvertimeException ex) {
+        } catch (BookNotFoundException | OvertimeException ex) {
             lblReceiveError.setText(ex.getMessage());
-        }
-        catch (NullPointerException ex) {
+        } catch (NullPointerException ex) {
             lblReceiveError.setText("Book is not borrowed.");
         }
     }
@@ -414,7 +354,6 @@ public class Dashboard implements Initializable, UserLoadable {
         lblCollectionError.setText("");
 
         editingItem = item;
-        editItemMode = true;
 
         btnAddItem.setText("Edit item");
         paneAddItem.setVisible(true);
@@ -459,7 +398,7 @@ public class Dashboard implements Initializable, UserLoadable {
     @FXML
     private void onLogoutClick() {
         try {
-            HelloApplication.loadView(Views.LOGIN);
+            HelloApplication.loadView("hello-view.fxml", new HelloController());
         } catch (IOException e) {
             System.err.println("Unable to logout (what)");
         }

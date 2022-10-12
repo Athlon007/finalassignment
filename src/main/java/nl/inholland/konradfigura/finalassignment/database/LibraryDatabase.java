@@ -171,7 +171,7 @@ public class LibraryDatabase extends Database<LibraryItem> {
 
     public boolean isMemberBorrowingBook(Member member) throws NullPointerException {
         for (LibraryItem li : list) {
-            if (li.getLendingUser().equals(member)) {
+            if (li.getLendingUser() != null && li.getLendingUser().equals(member)) {
                 return true;
             }
         }

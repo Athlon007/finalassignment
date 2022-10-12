@@ -34,7 +34,7 @@ public class HelloApplication extends Application {
         };
 
         try {
-            loadView(Views.LOGIN);
+            loadView("hello-view.fxml", new HelloController());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -44,27 +44,16 @@ public class HelloApplication extends Application {
         launch();
     }
 
-    public static void loadView(Views view) throws IOException {
-        loadView(view, null);
-    }
-
-    public static void loadView(Views view, User asUser) throws IOException {
-        String resourceName = "";
-        switch (view) {
-            case LOGIN -> resourceName = "hello-view.fxml";
-            case DASHBOARD -> resourceName = "dashboard.fxml";
-            default -> System.err.println("View " + view + " does not exist.");
+    public static void loadView(String resource, Object controller) throws IOException {
+        if (HelloApplication.class.getResource(resource) == null) {
+            throw new NullPointerException("Resource does not exist.");
         }
-
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(resourceName));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(resource));
+        fxmlLoader.setController(controller);
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Library System");
         stage.setScene(scene);
         stage.show();
-
-        if (fxmlLoader.getController() instanceof UserLoadable loadable) {
-            loadable.loadUser(asUser);
-        }
 
         // Center the view to the currently active display
         Rectangle2D rect = getActiveScreen().getVisualBounds();

@@ -40,8 +40,8 @@ public class UserDatabase extends Database<User>  {
         // If the database gets loaded as empty (ex. file got corrupted, a dummy account will always be created).
 
         try {
-            add("James", "password");
-            add("Gordon", "hello");
+            add("UserOne", "password");
+            add("UserTwo", "hello");
         } catch (Exception e) {
             System.err.print("Wait, how did this happen?");
         }

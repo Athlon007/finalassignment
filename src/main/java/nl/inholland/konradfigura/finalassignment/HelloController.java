@@ -32,7 +32,9 @@ public class HelloController {
         }
 
         try {
-            HelloApplication.loadView(Views.DASHBOARD, user);
+            Dashboard dashboard = new Dashboard();
+            HelloApplication.loadView("dashboard.fxml", dashboard);
+            dashboard.loadUser(user);
         }
         catch (Exception exception) {
             setWarningText("Something went wrong while loading the dashboard.");

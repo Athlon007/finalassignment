@@ -4,10 +4,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
 
-public class NoDigitTextFieldListener implements ChangeListener<String> {
+public class OnlyDigitsTextFieldListener implements ChangeListener<String> {
     private final TextField field;
 
-    public NoDigitTextFieldListener(TextField field) {
+    public OnlyDigitsTextFieldListener(TextField field) {
         this.field = field;
     }
 
