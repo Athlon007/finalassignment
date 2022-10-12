@@ -6,7 +6,7 @@ module nl.inholland.konradfigura.finalassignment {
 
     opens nl.inholland.konradfigura.finalassignment to javafx.fxml;
     exports nl.inholland.konradfigura.finalassignment;
-    exports nl.inholland.konradfigura.finalassignment.dal;
+    exports nl.inholland.konradfigura.finalassignment.logic;
     exports nl.inholland.konradfigura.finalassignment.model;
     exports nl.inholland.konradfigura.finalassignment.model.exceptions;
     exports nl.inholland.konradfigura.finalassignment.ui;
