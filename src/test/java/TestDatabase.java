@@ -1,6 +1,6 @@
-import nl.inholland.konradfigura.finalassignment.dal.LibraryDatabase;
-import nl.inholland.konradfigura.finalassignment.dal.MemberDatabase;
-import nl.inholland.konradfigura.finalassignment.dal.UserDatabase;
+import nl.inholland.konradfigura.finalassignment.logic.LibraryDatabase;
+import nl.inholland.konradfigura.finalassignment.logic.MemberDatabase;
+import nl.inholland.konradfigura.finalassignment.logic.UserDatabase;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
 import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
 import nl.inholland.konradfigura.finalassignment.model.Member;

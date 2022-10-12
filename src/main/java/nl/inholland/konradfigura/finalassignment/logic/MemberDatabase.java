@@ -1,4 +1,4 @@
-package nl.inholland.konradfigura.finalassignment.dal;
+package nl.inholland.konradfigura.finalassignment.logic;
 
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.Member;
