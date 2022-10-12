@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Database<Serializable> {
-    private boolean isListLoaded = false;
-
     protected List<Serializable> list = new ArrayList<>();
 
     public abstract void add(Serializable obj);
@@ -35,7 +33,6 @@ public abstract class Database<Serializable> {
             }
         }
 
-        isListLoaded = true;
         return output;
     }
 
@@ -43,10 +40,6 @@ public abstract class Database<Serializable> {
      * Writes the database to the DATABASE_FILE.
      */
     public void write() throws IOException {
-        if (!isListLoaded) {
-            return;
-        }
-
         try (FileOutputStream fos = new FileOutputStream(getDatabaseFile()); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(list);
         }
