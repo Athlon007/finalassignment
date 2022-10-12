@@ -1,4 +1,4 @@
-package nl.inholland.konradfigura.finalassignment;
+package nl.inholland.konradfigura.finalassignment.ui;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import nl.inholland.konradfigura.finalassignment.HelloApplication;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;

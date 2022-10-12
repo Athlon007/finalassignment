@@ -1,4 +1,4 @@
-package nl.inholland.konradfigura.finalassignment;
+package nl.inholland.konradfigura.finalassignment.ui;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
