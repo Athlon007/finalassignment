@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import nl.inholland.konradfigura.finalassignment.HelloApplication;
+import nl.inholland.konradfigura.finalassignment.Application;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
@@ -20,7 +20,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-public class Dashboard implements Initializable {
+public class DashboardController implements Initializable {
     @FXML
     private TabPane tabContainer;
     @FXML
@@ -122,12 +122,12 @@ public class Dashboard implements Initializable {
 
     private void loadTableMembers() {
         tblMembers.getItems().clear();
-        tblMembers.setItems(FXCollections.observableArrayList(HelloApplication.getMembers().getAll()));
+        tblMembers.setItems(FXCollections.observableArrayList(Application.getMembers().getAll()));
     }
 
     private void loadTableItems() {
         tblItems.getItems().clear();
-        tblItems.setItems(FXCollections.observableArrayList(HelloApplication.getLibrary().getAll()));
+        tblItems.setItems(FXCollections.observableArrayList(Application.getLibrary().getAll()));
     }
 
     @FXML
@@ -191,9 +191,9 @@ public class Dashboard implements Initializable {
 
         try {
             if (editingMember != null) {
-                HelloApplication.getMembers().editUser(editingMember, firstName, lastName, birthdate);
+                Application.getMembers().editUser(editingMember, firstName, lastName, birthdate);
             } else {
-                HelloApplication.getMembers().add(firstName, lastName, birthdate);
+                Application.getMembers().add(firstName, lastName, birthdate);
             }
 
             loadTableMembers();
@@ -213,7 +213,7 @@ public class Dashboard implements Initializable {
             return;
         }
 
-        if (HelloApplication.getLibrary().isMemberBorrowingBook(selectedPerson)) {
+        if (Application.getLibrary().isMemberBorrowingBook(selectedPerson)) {
             lblMembersError.setText("Can't delete member: Member has borrowed a book.");
             return;
         }
@@ -221,7 +221,7 @@ public class Dashboard implements Initializable {
         lblMembersError.setText("");
 
         try {
-            HelloApplication.getMembers().delete(selectedPerson);
+            Application.getMembers().delete(selectedPerson);
             loadTableMembers();
         }
         catch (MemberNotFoundException ex) {
@@ -236,10 +236,10 @@ public class Dashboard implements Initializable {
 
         try {
             if (editingItem != null) {
-                HelloApplication.getLibrary().edit(editingItem, title, author);
+                Application.getLibrary().edit(editingItem, title, author);
             }
             else {
-                HelloApplication.getLibrary().add(title, author);
+                Application.getLibrary().add(title, author);
             }
             paneAddItem.setVisible(false);
             loadTableItems();
@@ -261,11 +261,11 @@ public class Dashboard implements Initializable {
         int bookCode = Integer.parseInt(bookCodeString);
         int lenderCode = Integer.parseInt(lenderCodeString);
 
-        LibraryItem book = HelloApplication.getLibrary().getById(bookCode);
+        LibraryItem book = Application.getLibrary().getById(bookCode);
 
         try {
-            Member member = HelloApplication.getMembers().getById(lenderCode);
-            HelloApplication.getLibrary().lendBook(book, member, LocalDate.now());
+            Member member = Application.getMembers().getById(lenderCode);
+            Application.getLibrary().lendBook(book, member, LocalDate.now());
 
             setLabelGreen(lblLendError);
             lblLendError.setText(String.format("Book %s [%d] has been borrowed to member %s",
@@ -302,8 +302,8 @@ public class Dashboard implements Initializable {
         int itemCode = Integer.parseInt(txtReceiveCode.getText());
 
         try {
-            LibraryItem item = HelloApplication.getLibrary().getById(itemCode);
-            HelloApplication.getLibrary().returnBook(item);
+            LibraryItem item = Application.getLibrary().getById(itemCode);
+            Application.getLibrary().returnBook(item);
 
             setLabelGreen(lblReceiveError);
             lblReceiveError.setText("Book has been returned!");
@@ -364,7 +364,7 @@ public class Dashboard implements Initializable {
         lblCollectionError.setText("");
 
         try {
-            HelloApplication.getLibrary().delete(item);
+            Application.getLibrary().delete(item);
             loadTableItems();
         } catch (BookNotFoundException ex) {
             lblCollectionError.setText(ex.getMessage());
@@ -384,13 +384,13 @@ public class Dashboard implements Initializable {
 
     private void loadTableItems(String query) {
         tblItems.getItems().clear();
-        tblItems.getItems().addAll(HelloApplication.getLibrary().getAll(query));
+        tblItems.getItems().addAll(Application.getLibrary().getAll(query));
     }
 
     @FXML
     private void onLogoutClick() {
         try {
-            HelloApplication.loadView("hello-view.fxml", new HelloController());
+            Application.loadView("login.fxml", new LoginController());
         } catch (IOException e) {
             System.err.println("Unable to logout (what)");
         }

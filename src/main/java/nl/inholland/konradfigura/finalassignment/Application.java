@@ -1,6 +1,5 @@
 package nl.inholland.konradfigura.finalassignment;
 
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -11,19 +10,19 @@ import nl.inholland.konradfigura.finalassignment.logic.Database;
 import nl.inholland.konradfigura.finalassignment.logic.LibraryDatabase;
 import nl.inholland.konradfigura.finalassignment.logic.MemberDatabase;
 import nl.inholland.konradfigura.finalassignment.logic.UserDatabase;
-import nl.inholland.konradfigura.finalassignment.ui.HelloController;
+import nl.inholland.konradfigura.finalassignment.ui.LoginController;
 
 import java.awt.*;
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class Application extends javafx.application.Application {
     private static Stage stage;
 
     private static Database[] databases;
 
     @Override
     public void start(Stage stage) {
-        HelloApplication.stage = stage;
+        Application.stage = stage;
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this::onCloseHandler);
 
         databases = new Database[] {
@@ -33,7 +32,7 @@ public class HelloApplication extends Application {
         };
 
         try {
-            loadView("hello-view.fxml", new HelloController());
+            loadView("login.fxml", new LoginController());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -44,10 +43,10 @@ public class HelloApplication extends Application {
     }
 
     public static void loadView(String resource, Object controller) throws IOException {
-        if (HelloApplication.class.getResource(resource) == null) {
+        if (Application.class.getResource(resource) == null) {
             throw new NullPointerException("Resource does not exist.");
         }
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(resource));
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource(resource));
         fxmlLoader.setController(controller);
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Library System");

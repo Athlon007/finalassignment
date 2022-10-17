@@ -5,10 +5,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import nl.inholland.konradfigura.finalassignment.HelloApplication;
+import nl.inholland.konradfigura.finalassignment.Application;
 import nl.inholland.konradfigura.finalassignment.model.User;
 
-public class HelloController {
+public class LoginController {
 
     @FXML
     private Label lblWarning;
@@ -25,7 +25,7 @@ public class HelloController {
     }
 
     private void login() {
-        User user = HelloApplication.getUsers().getUser(txtUsername.getText(), txtPassword.getText());
+        User user = Application.getUsers().getUser(txtUsername.getText(), txtPassword.getText());
 
         if (user == null) {
             setWarningText("User does not exist, or password is incorrect.");
@@ -33,8 +33,8 @@ public class HelloController {
         }
 
         try {
-            Dashboard dashboard = new Dashboard();
-            HelloApplication.loadView("dashboard.fxml", dashboard);
+            DashboardController dashboard = new DashboardController();
+            Application.loadView("dashboard.fxml", dashboard);
             dashboard.loadUser(user);
         }
         catch (Exception exception) {
