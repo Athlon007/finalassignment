@@ -2,13 +2,11 @@ package nl.inholland.konradfigura.finalassignment.ui;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import nl.inholland.konradfigura.finalassignment.Application;
+import nl.inholland.konradfigura.finalassignment.ApplicationMain;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
@@ -111,22 +109,22 @@ public class DashboardController implements Initializable {
 
     private void loadTableMembers() {
         tblMembers.getItems().clear();
-        tblMembers.setItems(FXCollections.observableArrayList(Application.getMembers().getAll()));
+        tblMembers.setItems(FXCollections.observableArrayList(ApplicationMain.getMembers().getAll()));
     }
 
     private void loadTableMembers(String query) {
         tblMembers.getItems().clear();
-        tblMembers.setItems(FXCollections.observableArrayList(Application.getMembers().getAll(query)));
+        tblMembers.setItems(FXCollections.observableArrayList(ApplicationMain.getMembers().getAll(query)));
     }
 
     private void loadTableItems() {
         tblItems.getItems().clear();
-        tblItems.setItems(FXCollections.observableArrayList(Application.getLibrary().getAll()));
+        tblItems.setItems(FXCollections.observableArrayList(ApplicationMain.getLibrary().getAll()));
     }
 
     private void loadTableItems(String query) {
         tblItems.getItems().clear();
-        tblItems.getItems().addAll(FXCollections.observableArrayList(Application.getLibrary().getAll(query)));
+        tblItems.getItems().addAll(FXCollections.observableArrayList(ApplicationMain.getLibrary().getAll(query)));
     }
 
     private void initTabSwitcher() {
@@ -230,13 +228,18 @@ public class DashboardController implements Initializable {
 
         String firstName = txtNewMemberFirstName.getText();
         String lastName = txtNewMemberLastName.getText();
+
+        // A workaround for a bug in JavaFX listed here:
+        // https://bugs.openjdk.org/browse/JDK-8092295?page=com.atlassian.jira.plugin.system.issuetabpanels:changehistory-tabpanel
+        String dpText = dpNewMemberBirthdate.getEditor().getText();
+        dpNewMemberBirthdate.setValue(dpNewMemberBirthdate.getConverter().fromString(dpText));
         LocalDate birthdate = dpNewMemberBirthdate.getValue();
 
         try {
             if (editingMember != null) {
-                Application.getMembers().editUser(editingMember, firstName, lastName, birthdate);
+                ApplicationMain.getMembers().editUser(editingMember, firstName, lastName, birthdate);
             } else {
-                Application.getMembers().add(firstName, lastName, birthdate);
+                ApplicationMain.getMembers().add(firstName, lastName, birthdate);
             }
 
             loadTableMembers();
@@ -256,7 +259,7 @@ public class DashboardController implements Initializable {
             return;
         }
 
-        if (Application.getLibrary().isMemberBorrowingBook(selectedPerson)) {
+        if (ApplicationMain.getLibrary().isMemberBorrowingBook(selectedPerson)) {
             lblMembersError.setText("Can't delete member: Member has borrowed a book.");
             return;
         }
@@ -264,7 +267,7 @@ public class DashboardController implements Initializable {
         lblMembersError.setText("");
 
         try {
-            Application.getMembers().delete(selectedPerson);
+            ApplicationMain.getMembers().delete(selectedPerson);
             loadTableMembers();
         }
         catch (MemberNotFoundException ex) {
@@ -279,10 +282,10 @@ public class DashboardController implements Initializable {
 
         try {
             if (editingItem != null) {
-                Application.getLibrary().edit(editingItem, title, author);
+                ApplicationMain.getLibrary().edit(editingItem, title, author);
             }
             else {
-                Application.getLibrary().add(title, author);
+                ApplicationMain.getLibrary().add(title, author);
             }
             paneAddItem.setVisible(false);
             loadTableItems();
@@ -304,11 +307,11 @@ public class DashboardController implements Initializable {
         int bookCode = Integer.parseInt(bookCodeString);
         int lenderCode = Integer.parseInt(lenderCodeString);
 
-        LibraryItem book = Application.getLibrary().getById(bookCode);
+        LibraryItem book = ApplicationMain.getLibrary().getById(bookCode);
 
         try {
-            Member member = Application.getMembers().getById(lenderCode);
-            Application.getLibrary().lendBook(book, member, LocalDate.now());
+            Member member = ApplicationMain.getMembers().getById(lenderCode);
+            ApplicationMain.getLibrary().lendBook(book, member, LocalDate.now());
 
             setLabelGreen(lblLendError);
             lblLendError.setText(String.format("Book %s [%d] has been borrowed to member %s",
@@ -345,8 +348,8 @@ public class DashboardController implements Initializable {
         int itemCode = Integer.parseInt(txtReceiveCode.getText());
 
         try {
-            LibraryItem item = Application.getLibrary().getById(itemCode);
-            Application.getLibrary().returnBook(item);
+            LibraryItem item = ApplicationMain.getLibrary().getById(itemCode);
+            ApplicationMain.getLibrary().returnBook(item);
 
             setLabelGreen(lblReceiveError);
             lblReceiveError.setText("Book has been returned!");
@@ -407,7 +410,7 @@ public class DashboardController implements Initializable {
         lblCollectionError.setText("");
 
         try {
-            Application.getLibrary().delete(item);
+            ApplicationMain.getLibrary().delete(item);
             loadTableItems();
         } catch (BookNotFoundException ex) {
             lblCollectionError.setText(ex.getMessage());
@@ -417,9 +420,9 @@ public class DashboardController implements Initializable {
     @FXML
     private void onLogoutClick() {
         try {
-            Application.loadView("login.fxml", new LoginController());
+            ApplicationMain.loadView("login.fxml", new LoginController());
         } catch (IOException e) {
-            System.err.println("Unable to logout (what)");
+            System.err.println("Unable to logout (what?!)");
         }
     }
 }

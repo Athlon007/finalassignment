@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="494.0" minWidth="1118.0" prefHeight="574.0" prefWidth="870.0" styleClass="body-dashboard" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane minHeight="494.0" minWidth="1118.0" prefHeight="574.0" prefWidth="583.0" styleClass="body-dashboard" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TabPane fx:id="tabContainer" layoutX="-1.0" layoutY="30.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="647.0" prefWidth="1118.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
         <tabs>
@@ -23,7 +23,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #c9c9c9;">
                      <children>
-                        <TextField fx:id="txtMemberSearch" layoutX="757.0" layoutY="12.0" prefHeight="30.0" prefWidth="307.0" promptText="Search" />
+                        <TextField fx:id="txtMemberSearch" layoutX="757.0" layoutY="12.0" prefHeight="30.0" prefWidth="307.0" promptText="Search" AnchorPane.rightAnchor="54.0" />
                         <Label fx:id="lblWelcome11" layoutX="54.0" prefHeight="53.0" prefWidth="391.0" styleClass="header-category" text="Members" textFill="WHITE">
                            <font>
                               <Font size="33.0" />
@@ -179,8 +179,8 @@
             <Font size="39.0" />
          </font>
       </Label>
-      <Button layoutX="360.0" layoutY="30.0" mnemonicParsing="false" onAction="#onLogoutClick" styleClass="button-secondary" text="Logout" />
-      <ImageView fitHeight="53.0" fitWidth="79.0" layoutX="24.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+      <Button layoutX="1005.0" maxWidth="113.0" mnemonicParsing="false" onAction="#onLogoutClick" styleClass="button-secondary" text="Logout" AnchorPane.rightAnchor="0.0" />
+      <ImageView fitHeight="53.0" fitWidth="80.0" layoutX="24.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@library.png" />
          </image>

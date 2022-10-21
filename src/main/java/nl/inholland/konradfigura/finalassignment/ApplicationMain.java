@@ -16,14 +16,14 @@ import nl.inholland.konradfigura.finalassignment.ui.LoginController;
 import java.awt.*;
 import java.io.IOException;
 
-public class Application extends javafx.application.Application {
+public class ApplicationMain extends javafx.application.Application {
     private static Stage stage;
 
     private static Database[] databases;
 
     @Override
     public void start(Stage stage) {
-        Application.stage = stage;
+        ApplicationMain.stage = stage;
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this::onCloseHandler);
 
         databases = new Database[] {
@@ -48,10 +48,10 @@ public class Application extends javafx.application.Application {
     }
 
     public static void loadView(String resource, Object controller) throws IOException {
-        if (Application.class.getResource(resource) == null) {
+        if (ApplicationMain.class.getResource(resource) == null) {
             throw new NullPointerException("Resource does not exist.");
         }
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource(resource));
+        FXMLLoader fxmlLoader = new FXMLLoader(ApplicationMain.class.getResource(resource));
         fxmlLoader.setController(controller);
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Library System");
@@ -65,28 +65,32 @@ public class Application extends javafx.application.Application {
     }
 
     private void onCloseHandler(WindowEvent event) {
-        try {
-            for (Database db : databases) {
+        for (Database db : databases) {
+            try {
                 db.write();
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
             }
         }
-        catch (Exception ex ){
-            System.err.println(ex.getMessage());
-        }
     }
 
-    public static UserDatabase getUsers() {
-        return (UserDatabase)databases[0];
-    }
+    /**
+     * Returns the Users database.
+     */
+    public static UserDatabase getUsers() { return (UserDatabase)databases[0]; }
 
-    public static MemberDatabase getMembers() {
-        return (MemberDatabase)databases[1];
-    }
+    /**
+     * Returns the Members database.
+     */
+    public static MemberDatabase getMembers() { return (MemberDatabase)databases[1]; }
 
+    /**
+     * Returns the Library database.
+     */
     public static LibraryDatabase getLibrary() { return (LibraryDatabase)databases[2]; }
 
     /**
-     * Returns the screen, on which currently is mouse.
+     * Returns the screen, where the mouse is located.
      */
     private static Screen getActiveScreen() {
         Point mousePosition = MouseInfo.getPointerInfo().getLocation();

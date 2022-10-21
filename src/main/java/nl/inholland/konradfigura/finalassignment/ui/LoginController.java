@@ -5,7 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import nl.inholland.konradfigura.finalassignment.Application;
+import nl.inholland.konradfigura.finalassignment.ApplicationMain;
 import nl.inholland.konradfigura.finalassignment.model.User;
 
 public class LoginController {
@@ -25,7 +25,7 @@ public class LoginController {
     }
 
     private void login() {
-        User user = Application.getUsers().getUser(txtUsername.getText(), txtPassword.getText());
+        User user = ApplicationMain.getUsers().getUser(txtUsername.getText(), txtPassword.getText());
 
         if (user == null) {
             setWarningText("User does not exist, or password is incorrect.");
@@ -34,7 +34,7 @@ public class LoginController {
 
         try {
             DashboardController dashboard = new DashboardController();
-            Application.loadView("dashboard.fxml", dashboard);
+            ApplicationMain.loadView("dashboard.fxml", dashboard);
             dashboard.loadUser(user);
         }
         catch (Exception exception) {

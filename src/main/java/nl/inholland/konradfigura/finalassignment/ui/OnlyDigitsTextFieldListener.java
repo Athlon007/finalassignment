@@ -14,7 +14,7 @@ public class OnlyDigitsTextFieldListener implements ChangeListener<String> {
     @Override
     public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         if (!newValue.matches("\\d*")) {
-            field.setText(newValue.replaceAll("[^\\d]", ""));
+            field.setText(newValue.replaceAll("\\D", ""));
         }
     }
 }
