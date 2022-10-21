@@ -1,5 +1,6 @@
 package nl.inholland.konradfigura.finalassignment.logic;
 
+import nl.inholland.konradfigura.finalassignment.dataaccess.Database;
 import nl.inholland.konradfigura.finalassignment.model.LendInfo;
 import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
 import nl.inholland.konradfigura.finalassignment.model.Loadable;
@@ -9,6 +10,7 @@ import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundEx
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,20 +19,37 @@ import java.util.List;
 public class Library implements Loadable<LibraryItem> {
     public static final int OVERTIME_DAYS = 21;
 
+    private String databaseFile = "library.db";
+
+    private Database database;
+
     private List<LibraryItem> list;
 
-    public Library() {}
+    public Library(Database database) {
+        this.database = database;
+        load(database.read(databaseFile));
+    }
 
-    public Library(List<LibraryItem> list) {
-        setAll(list);
+    public Library(Database database, String databaseFile) {
+        this.database = database;
+        this.databaseFile = databaseFile;
+        load(database.read(databaseFile));
     }
 
     @Override
-    public void setAll(List<LibraryItem> list) {
+    public void load(List<LibraryItem> list) {
         this.list = list;
     }
 
     @Override
+    public void save() {
+        try {
+            database.write(databaseFile, getAll());
+        } catch (IOException e) {
+            System.out.println("Unable to save Library database.");
+        }
+    }
+
     public List<LibraryItem> getAll() {
         return list;
     }

@@ -4,6 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public interface Loadable<Serializable> {
-    void setAll(List<Serializable> list);
-    List<Serializable> getAll();
+    void load(List<Serializable> list);
+    void save();
 }

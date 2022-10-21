@@ -39,9 +39,9 @@ class TestDatabase {
         }
 
         Database db = new Database();
-        dbLibrary = new Library(db.read(LIBRARY_TEST_FILE));
-        dbMembers = new Members(db.read(MEMBER_TEST_FILE));
-        dbUsers = new Users(db.read(USER_TEST_FILE));
+        dbLibrary = new Library(db, LIBRARY_TEST_FILE);
+        dbMembers = new Members(db, MEMBER_TEST_FILE);
+        dbUsers = new Users(db, USER_TEST_FILE);
     }
     @Test
     void testOvertimeBookReturn() {

@@ -1,23 +1,34 @@
 package nl.inholland.konradfigura.finalassignment.logic;
 
+import nl.inholland.konradfigura.finalassignment.dataaccess.Database;
 import nl.inholland.konradfigura.finalassignment.model.Loadable;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.UserAlreadyExists;
 import nl.inholland.konradfigura.finalassignment.model.User;
 
+import java.io.IOException;
 import java.util.List;
 
 public class Users implements Loadable<User> {
     private List<User> list;
 
-    public Users() {}
+    private String databaseFile = "users.db";
+    private Database database;
 
-    public Users(List<User> list) {
-        setAll(list);
+
+    public Users(Database database) {
+        this.database = database;
+        load(database.read(databaseFile));
+    }
+
+    public Users(Database database, String databaseFile) {
+        this.database = database;
+        this.databaseFile = databaseFile;
+        load(database.read(databaseFile));
     }
 
     @Override
-    public void setAll(List<User> list) {
+    public void load(List<User> list) {
         this.list = list;
         if (list.isEmpty()) {
             createUsers();
@@ -25,6 +36,14 @@ public class Users implements Loadable<User> {
     }
 
     @Override
+    public void save() {
+        try {
+            database.write(databaseFile, getAll());
+        } catch (IOException e) {
+            System.out.println("Unable to write to Users database.");
+        }
+    }
+
     public List<User> getAll() {
         return list;
     }

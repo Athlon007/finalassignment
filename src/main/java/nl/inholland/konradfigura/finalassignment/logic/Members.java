@@ -1,9 +1,11 @@
 package nl.inholland.konradfigura.finalassignment.logic;
 
+import nl.inholland.konradfigura.finalassignment.dataaccess.Database;
 import nl.inholland.konradfigura.finalassignment.model.Loadable;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.Member;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,18 +13,35 @@ import java.util.List;
 public class Members implements Loadable<Member> {
     private List<Member> list;
 
-    public Members() {}
+    private String databaseFile = "members.db";
 
-    public Members(List<Member> list) {
-        setAll(list);
+    private Database database;
+
+    public Members(Database database) {
+        this.database = database;
+        load(database.read(databaseFile));
+    }
+
+    public Members(Database database, String databaseFile) {
+        this.database = database;
+        this.databaseFile = databaseFile;
+        load(database.read(databaseFile));
     }
 
     @Override
-    public void setAll(List<Member> list) {
+    public void load(List<Member> list) {
         this.list = list;
     }
 
     @Override
+    public void save() {
+        try {
+            database.write(databaseFile, getAll());
+        } catch (IOException e) {
+            System.out.println("Unable to write Members database.");
+        }
+    }
+
     public List<Member> getAll() {
         return list;
     }

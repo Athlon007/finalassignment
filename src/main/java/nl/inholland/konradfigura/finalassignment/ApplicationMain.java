@@ -22,12 +22,7 @@ import java.util.List;
 public class ApplicationMain extends javafx.application.Application {
     private static Stage stage;
 
-    private static final List<Loadable> loadables = new ArrayList<>();
-    private static Database database;
-
-    private static final String USERS_FILE = "users.db";
-    private static final String MEMBERS_FILE = "members.db";
-    private static final String LIBRARY_FILE = "library.db";
+    private static Loadable[] loadables;
 
 
     @Override
@@ -35,11 +30,13 @@ public class ApplicationMain extends javafx.application.Application {
         ApplicationMain.stage = stage;
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this::onCloseHandler);
 
-        database = new Database();
+        Database database = new Database();
 
-        loadables.add(new Users(database.read(USERS_FILE)));
-        loadables.add(new Members(database.read(MEMBERS_FILE)));
-        loadables.add(new Library(database.read(LIBRARY_FILE)));
+        loadables = new Loadable[] {
+            new Users(database),
+            new Members(database),
+            new Library(database)
+        };
 
         try {
             loadView("login.fxml", new LoginController());
@@ -74,28 +71,24 @@ public class ApplicationMain extends javafx.application.Application {
     }
 
     private void onCloseHandler(WindowEvent event) {
-        try {
-            database.write(USERS_FILE, getUsers().getAll());
-            database.write(MEMBERS_FILE, getMembers().getAll());
-            database.write(LIBRARY_FILE, getLibrary().getAll());
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
+        for (Loadable loadable : loadables) {
+            loadable.save();
         }
     }
     /**
      * Returns the Users database.
      */
-    public static Users getUsers() { return (Users)loadables.get(0); }
+    public static Users getUsers() { return (Users)loadables[0]; }
 
     /**
      * Returns the Members database.
      */
-    public static Members getMembers() { return (Members)loadables.get(1); }
+    public static Members getMembers() { return (Members)loadables[1]; }
 
     /**
      * Returns the Library database.
      */
-    public static Library getLibrary() { return (Library)loadables.get(2); }
+    public static Library getLibrary() { return (Library)loadables[2]; }
 
     /**
      * Returns the screen, where the mouse is located.
