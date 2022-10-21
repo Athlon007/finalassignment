@@ -3,6 +3,7 @@ package nl.inholland.konradfigura.finalassignment;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -34,7 +35,11 @@ public class Application extends javafx.application.Application {
         try {
             loadView("login.fxml", new LoginController());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            // Unlikely to happen, but even if the Login fails to load...
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Fatal Error");
+            a.setHeaderText("Program was not able to start.");
+            a.setContentText(e.getMessage());
         }
     }
 

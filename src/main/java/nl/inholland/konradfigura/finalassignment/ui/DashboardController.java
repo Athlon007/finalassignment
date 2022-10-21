@@ -3,6 +3,7 @@ package nl.inholland.konradfigura.finalassignment.ui;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -31,6 +32,8 @@ public class DashboardController implements Initializable {
     private TableView<LibraryItem> tblItems;
     @FXML
     private TableColumn<LibraryItem, String> tblItemsAvailable;
+    @FXML
+    private TextField txtMemberSearch;
 
     // ADD/EDIT MEMBER PANE
     @FXML
@@ -57,6 +60,8 @@ public class DashboardController implements Initializable {
     private Button btnAddItem;
     @FXML
     private Label lblErrorAddItem;
+    @FXML
+    private TextField txtItemSearch;
 
     // LENDING/RECEIVING
     @FXML
@@ -83,27 +88,8 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Tab switching.
-        tabContainer.getSelectionModel().selectedItemProperty().addListener(
-                (observableValue, oldTab, newTab) -> {
-                    switch (newTab.getId()) {
-                        case "tabMembers":
-                            paneAddMember.setVisible(false);
-                            lblMembersError.setText("");
-                            loadTableMembers();
-                            break;
-                        case "tabCollection":
-                            paneAddItem.setVisible(false);
-                            lblCollectionError.setText("");
-                            loadTableItems();
-                            break;
-                        case "tabLending":
-                            lblLendError.setText("");
-                            lblReceiveError.setText("");
-                            break;
-                        default: break;
-                    }
-                }
-        );
+        initTabSwitcher();
+
         // Select last tab on load.
         tabContainer.getSelectionModel().select(tabContainer.getTabs().size() - 1);
 
@@ -114,6 +100,9 @@ public class DashboardController implements Initializable {
         txtLendItemCode.textProperty().addListener(new OnlyDigitsTextFieldListener(txtLendItemCode));
         txtLendMemberId.textProperty().addListener(new OnlyDigitsTextFieldListener(txtLendMemberId));
         txtReceiveCode.textProperty().addListener(new OnlyDigitsTextFieldListener(txtReceiveCode));
+
+        // Search fields.
+        initSearchBars();
     }
 
     public void loadUser(User user) {
@@ -125,9 +114,63 @@ public class DashboardController implements Initializable {
         tblMembers.setItems(FXCollections.observableArrayList(Application.getMembers().getAll()));
     }
 
+    private void loadTableMembers(String query) {
+        tblMembers.getItems().clear();
+        tblMembers.setItems(FXCollections.observableArrayList(Application.getMembers().getAll(query)));
+    }
+
     private void loadTableItems() {
         tblItems.getItems().clear();
         tblItems.setItems(FXCollections.observableArrayList(Application.getLibrary().getAll()));
+    }
+
+    private void loadTableItems(String query) {
+        tblItems.getItems().clear();
+        tblItems.getItems().addAll(FXCollections.observableArrayList(Application.getLibrary().getAll(query)));
+    }
+
+    private void initTabSwitcher() {
+        tabContainer.getSelectionModel().selectedItemProperty().addListener(
+                (observableValue, oldTab, newTab) -> {
+                    switch (newTab.getId()) {
+                        case "tabMembers":
+                            paneAddMember.setVisible(false);
+                            lblMembersError.setText("");
+                            txtMemberSearch.setText("");
+                            loadTableMembers();
+                            break;
+                        case "tabCollection":
+                            paneAddItem.setVisible(false);
+                            lblCollectionError.setText("");
+                            txtItemSearch.setText("");
+                            loadTableItems();
+                            break;
+                        case "tabLending":
+                            lblLendError.setText("");
+                            lblReceiveError.setText("");
+                            break;
+                        default: break;
+                    }
+                }
+        );
+    }
+
+    private void initSearchBars() {
+        txtItemSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                loadTableItems();
+            } else {
+                loadTableItems(newValue);
+            }
+        });
+
+        txtMemberSearch.textProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                loadTableMembers();
+            } else {
+                loadTableMembers(newValue);
+            }
+        }));
     }
 
     @FXML
@@ -369,22 +412,6 @@ public class DashboardController implements Initializable {
         } catch (BookNotFoundException ex) {
             lblCollectionError.setText(ex.getMessage());
         }
-    }
-
-    @FXML
-    private void onSearchTyped(ActionEvent event) {
-        String query = ((TextField)event.getSource()).getText();
-        if (query.isEmpty()) {
-            loadTableItems();
-        }
-        else {
-            loadTableItems(query);
-        }
-    }
-
-    private void loadTableItems(String query) {
-        tblItems.getItems().clear();
-        tblItems.getItems().addAll(Application.getLibrary().getAll(query));
     }
 
     @FXML

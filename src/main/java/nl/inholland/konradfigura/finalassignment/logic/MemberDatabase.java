@@ -4,6 +4,8 @@ import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFound
 import nl.inholland.konradfigura.finalassignment.model.Member;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemberDatabase extends Database<Member>  {
     public MemberDatabase() {
@@ -83,5 +85,16 @@ public class MemberDatabase extends Database<Member>  {
             }
         }
         return null;
+    }
+
+    public List<Member> getAll(String query) {
+        List<Member> result = new ArrayList<>();
+        for (Member member : list) {
+            if (member.getFirstName().toUpperCase().contains(query.toUpperCase())
+                    || member.getLastName().toUpperCase().contains(query.toUpperCase())) {
+                result.add(member);
+            }
+        }
+        return result;
     }
 }

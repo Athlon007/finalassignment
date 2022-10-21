@@ -23,6 +23,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #c9c9c9;">
                      <children>
+                        <TextField fx:id="txtMemberSearch" layoutX="757.0" layoutY="12.0" prefHeight="30.0" prefWidth="307.0" promptText="Search" />
                         <Label fx:id="lblWelcome11" layoutX="54.0" prefHeight="53.0" prefWidth="391.0" styleClass="header-category" text="Members" textFill="WHITE">
                            <font>
                               <Font size="33.0" />
@@ -135,7 +136,7 @@
                               <Button layoutX="125.0" layoutY="436.0" mnemonicParsing="false" onAction="#onCancelAddItemClick" styleClass="button-secondary" text="Cancel" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="125.0" />
                            </children>
                         </AnchorPane>
-                        <TextField fx:id="txtItemSearch" layoutX="757.0" layoutY="12.0" onAction="#onSearchTyped" prefHeight="30.0" prefWidth="307.0" promptText="Search" AnchorPane.rightAnchor="54.0" />
+                        <TextField fx:id="txtItemSearch" layoutX="757.0" layoutY="12.0" prefHeight="30.0" prefWidth="307.0" promptText="Search" AnchorPane.rightAnchor="54.0" />
                         <Label fx:id="lblCollectionError" layoutX="429.0" layoutY="442.0" styleClass="error-label" />
                      </children>
                   </AnchorPane>
