@@ -7,30 +7,39 @@ import javafx.scene.control.Alert;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import nl.inholland.konradfigura.finalassignment.logic.Database;
-import nl.inholland.konradfigura.finalassignment.logic.LibraryDatabase;
-import nl.inholland.konradfigura.finalassignment.logic.MemberDatabase;
-import nl.inholland.konradfigura.finalassignment.logic.UserDatabase;
+import nl.inholland.konradfigura.finalassignment.dataaccess.Database;
+import nl.inholland.konradfigura.finalassignment.logic.Library;
+import nl.inholland.konradfigura.finalassignment.logic.Members;
+import nl.inholland.konradfigura.finalassignment.logic.Users;
+import nl.inholland.konradfigura.finalassignment.model.Loadable;
 import nl.inholland.konradfigura.finalassignment.ui.LoginController;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ApplicationMain extends javafx.application.Application {
     private static Stage stage;
 
-    private static Database[] databases;
+    private static final List<Loadable> loadables = new ArrayList<>();
+    private static Database database;
+
+    private static final String USERS_FILE = "users.db";
+    private static final String MEMBERS_FILE = "members.db";
+    private static final String LIBRARY_FILE = "library.db";
+
 
     @Override
     public void start(Stage stage) {
         ApplicationMain.stage = stage;
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this::onCloseHandler);
 
-        databases = new Database[] {
-                new UserDatabase(),
-                new MemberDatabase(),
-                new LibraryDatabase()
-        };
+        database = new Database();
+
+        loadables.add(new Users(database.read(USERS_FILE)));
+        loadables.add(new Members(database.read(MEMBERS_FILE)));
+        loadables.add(new Library(database.read(LIBRARY_FILE)));
 
         try {
             loadView("login.fxml", new LoginController());
@@ -65,29 +74,29 @@ public class ApplicationMain extends javafx.application.Application {
     }
 
     private void onCloseHandler(WindowEvent event) {
-        for (Database db : databases) {
-            try {
-                db.write();
-            } catch (Exception ex) {
-                System.err.println(ex.getMessage());
-            }
+        try {
+            database.write(USERS_FILE, getUsers().getAll());
+            database.write(MEMBERS_FILE, getMembers().getAll());
+            database.write(LIBRARY_FILE, getLibrary().getAll());
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
         }
     }
 
     /**
      * Returns the Users database.
      */
-    public static UserDatabase getUsers() { return (UserDatabase)databases[0]; }
+    public static Users getUsers() { return (Users)loadables.get(0); }
 
     /**
      * Returns the Members database.
      */
-    public static MemberDatabase getMembers() { return (MemberDatabase)databases[1]; }
+    public static Members getMembers() { return (Members)loadables.get(1); }
 
     /**
      * Returns the Library database.
      */
-    public static LibraryDatabase getLibrary() { return (LibraryDatabase)databases[2]; }
+    public static Library getLibrary() { return (Library)loadables.get(2); }
 
     /**
      * Returns the screen, where the mouse is located.

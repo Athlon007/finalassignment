@@ -1,5 +1,6 @@
 package nl.inholland.konradfigura.finalassignment.logic;
 
+import nl.inholland.konradfigura.finalassignment.model.Loadable;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.Member;
 
@@ -7,16 +8,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MemberDatabase extends Database<Member>  {
-    public MemberDatabase() {
-        super("members.db");
+public class Members implements Loadable<Member> {
+    private List<Member> list;
+
+    public Members() {}
+
+    public Members(List<Member> list) {
+        setAll(list);
     }
 
-    public MemberDatabase(String databaseFile) {
-        super(databaseFile);
-    }
-
-    @Override
     public void add(Member member) {
         list.add(member);
     }
@@ -28,7 +28,6 @@ public class MemberDatabase extends Database<Member>  {
         add(member);
     }
 
-    @Override
     public void delete(Member member) throws MemberNotFoundException {
         if (!list.contains(member)) {
             throw new MemberNotFoundException("User was not found.");
@@ -65,7 +64,6 @@ public class MemberDatabase extends Database<Member>  {
         }
     }
 
-    @Override
     protected int generateId() {
         int highestId = 0;
         for (Member member : getAll()) {
@@ -77,7 +75,6 @@ public class MemberDatabase extends Database<Member>  {
         return highestId + 1;
     }
 
-    @Override
     public Member getById(int id) {
         for (Member member : list) {
             if (member.getId() == id) {
@@ -96,5 +93,15 @@ public class MemberDatabase extends Database<Member>  {
             }
         }
         return result;
+    }
+
+    @Override
+    public void setAll(List<Member> list) {
+        this.list = list;
+    }
+
+    @Override
+    public List<Member> getAll() {
+        return list;
     }
 }

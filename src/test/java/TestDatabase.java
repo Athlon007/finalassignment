@@ -1,6 +1,7 @@
-import nl.inholland.konradfigura.finalassignment.logic.LibraryDatabase;
-import nl.inholland.konradfigura.finalassignment.logic.MemberDatabase;
-import nl.inholland.konradfigura.finalassignment.logic.UserDatabase;
+import nl.inholland.konradfigura.finalassignment.dataaccess.Database;
+import nl.inholland.konradfigura.finalassignment.logic.Library;
+import nl.inholland.konradfigura.finalassignment.logic.Members;
+import nl.inholland.konradfigura.finalassignment.logic.Users;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
 import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
 import nl.inholland.konradfigura.finalassignment.model.Member;
@@ -14,9 +15,9 @@ import java.time.LocalDate;
 
 class TestDatabase {
 
-    private final LibraryDatabase dbLibrary;
-    private final UserDatabase dbUsers;
-    private final MemberDatabase dbMembers;
+    private final Library dbLibrary;
+    private final Users dbUsers;
+    private final Members dbMembers;
 
     public TestDatabase() {
         String LIBRARY_TEST_FILE = "testlib.db";
@@ -37,9 +38,10 @@ class TestDatabase {
             memFile.delete();
         }
 
-        dbLibrary = new LibraryDatabase(LIBRARY_TEST_FILE);
-        dbMembers = new MemberDatabase(MEMBER_TEST_FILE);
-        dbUsers = new UserDatabase(USER_TEST_FILE);
+        Database db = new Database();
+        dbLibrary = new Library(db.read(LIBRARY_TEST_FILE));
+        dbMembers = new Members(db.read(MEMBER_TEST_FILE));
+        dbUsers = new Users(db.read(USER_TEST_FILE));
     }
     @Test
     void testOvertimeBookReturn() {

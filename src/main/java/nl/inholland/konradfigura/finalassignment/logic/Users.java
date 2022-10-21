@@ -1,21 +1,19 @@
 package nl.inholland.konradfigura.finalassignment.logic;
 
+import nl.inholland.konradfigura.finalassignment.model.Loadable;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.UserAlreadyExists;
 import nl.inholland.konradfigura.finalassignment.model.User;
 
-public class UserDatabase extends Database<User>  {
+import java.util.List;
 
-    public UserDatabase() {
-        super("users.db");
+public class Users implements Loadable<User> {
+    private List<User> list;
 
-        if (list.isEmpty()) {
-            createUsers();
-        }
-    }
+    public Users() {}
 
-    public UserDatabase(String databaseFile) {
-        super(databaseFile);
+    public Users(List<User> list) {
+        setAll(list);
     }
 
     private void createUsers() {
@@ -26,7 +24,7 @@ public class UserDatabase extends Database<User>  {
             add("UserOne", "password");
             add("UserTwo", "hello");
         } catch (Exception e) {
-            System.err.print("Wait, how did this happen?");
+            System.err.print("Wait, how did this happen?\n" + e.getMessage());
         }
         User user = list.get(0);
         User user2 = list.get(1);
@@ -34,7 +32,6 @@ public class UserDatabase extends Database<User>  {
         System.out.printf("A dummy account has been added.%nLogin: %s%nPassword: %s%n", user2.getUsername(), user2.getPassword());
     }
 
-    @Override
     public void add(User member) {
         list.add(member);
     }
@@ -66,7 +63,6 @@ public class UserDatabase extends Database<User>  {
         return null;
     }
 
-    @Override
     public void delete(User user) throws MemberNotFoundException {
         if (!list.contains(user)) {
             throw new MemberNotFoundException("User was not found.");
@@ -74,7 +70,6 @@ public class UserDatabase extends Database<User>  {
         list.remove(user);
     }
 
-    @Override
     protected int generateId() {
         int highestId = 0;
         for (User user : getAll()) {
@@ -86,7 +81,6 @@ public class UserDatabase extends Database<User>  {
         return highestId + 1;
     }
 
-    @Override
     public User getById(int id) {
         for (User user : list) {
             if (user.getId() == id) {
@@ -94,5 +88,18 @@ public class UserDatabase extends Database<User>  {
             }
         }
         return null;
+    }
+
+    @Override
+    public void setAll(List<User> list) {
+        this.list = list;
+        if (list.isEmpty()) {
+            createUsers();
+        }
+    }
+
+    @Override
+    public List<User> getAll() {
+        return list;
     }
 }

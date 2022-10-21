@@ -2,6 +2,7 @@ package nl.inholland.konradfigura.finalassignment.logic;
 
 import nl.inholland.konradfigura.finalassignment.model.LendInfo;
 import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
+import nl.inholland.konradfigura.finalassignment.model.Loadable;
 import nl.inholland.konradfigura.finalassignment.model.Member;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotAvailableException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundException;
@@ -13,16 +14,27 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LibraryDatabase extends Database<LibraryItem> {
+public class Library implements Loadable<LibraryItem> {
     public static final int OVERTIME_DAYS = 21;
 
-    public LibraryDatabase() {
-        super("library.db");
+    private List<LibraryItem> list;
+
+    public Library() {}
+
+    public Library(List<LibraryItem> list) {
+        setAll(list);
     }
 
-    public LibraryDatabase(String databaseFile) {
-        super(databaseFile);
+    @Override
+    public void setAll(List<LibraryItem> list) {
+        this.list = list;
     }
+
+    @Override
+    public List<LibraryItem> getAll() {
+        return list;
+    }
+
 
     public void add(String title, String author) throws NullPointerException {
         if (title.isEmpty()) {
@@ -36,12 +48,10 @@ public class LibraryDatabase extends Database<LibraryItem> {
         add(item);
     }
 
-    @Override
     public void add(LibraryItem obj) {
         list.add(obj);
     }
 
-    @Override
     public void delete(LibraryItem obj) throws BookNotFoundException {
         if (!list.contains(obj)) {
             throw new BookNotFoundException("Book is not in the database.");
@@ -53,7 +63,6 @@ public class LibraryDatabase extends Database<LibraryItem> {
         list.remove(obj);
     }
 
-    @Override
     protected int generateId() {
         if (list == null || list.isEmpty()) {
             return 1;
@@ -68,7 +77,6 @@ public class LibraryDatabase extends Database<LibraryItem> {
         return highestId + 1;
     }
 
-    @Override
     public LibraryItem getById(int id) {
         for (LibraryItem item : list) {
             if (item.getId() == id) {
