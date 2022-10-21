@@ -16,8 +16,6 @@ import nl.inholland.konradfigura.finalassignment.ui.LoginController;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ApplicationMain extends javafx.application.Application {
     private static Stage stage;
