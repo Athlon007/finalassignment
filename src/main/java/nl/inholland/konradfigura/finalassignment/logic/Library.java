@@ -35,7 +35,6 @@ public class Library implements Loadable<LibraryItem> {
         return list;
     }
 
-
     public void add(String title, String author) throws NullPointerException {
         if (title.isEmpty()) {
             throw new NullPointerException("Title is empty.");

@@ -17,6 +17,16 @@ public class Members implements Loadable<Member> {
         setAll(list);
     }
 
+    @Override
+    public void setAll(List<Member> list) {
+        this.list = list;
+    }
+
+    @Override
+    public List<Member> getAll() {
+        return list;
+    }
+
     public void add(Member member) {
         list.add(member);
     }
@@ -93,15 +103,5 @@ public class Members implements Loadable<Member> {
             }
         }
         return result;
-    }
-
-    @Override
-    public void setAll(List<Member> list) {
-        this.list = list;
-    }
-
-    @Override
-    public List<Member> getAll() {
-        return list;
     }
 }

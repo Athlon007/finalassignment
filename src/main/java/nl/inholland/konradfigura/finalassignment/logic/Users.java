@@ -16,6 +16,19 @@ public class Users implements Loadable<User> {
         setAll(list);
     }
 
+    @Override
+    public void setAll(List<User> list) {
+        this.list = list;
+        if (list.isEmpty()) {
+            createUsers();
+        }
+    }
+
+    @Override
+    public List<User> getAll() {
+        return list;
+    }
+
     private void createUsers() {
         // FOR DEBUG PURPOSES ONLY!
         // If the database gets loaded as empty (ex. file got corrupted, a dummy account will always be created).
@@ -88,18 +101,5 @@ public class Users implements Loadable<User> {
             }
         }
         return null;
-    }
-
-    @Override
-    public void setAll(List<User> list) {
-        this.list = list;
-        if (list.isEmpty()) {
-            createUsers();
-        }
-    }
-
-    @Override
-    public List<User> getAll() {
-        return list;
     }
 }

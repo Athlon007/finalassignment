@@ -82,7 +82,6 @@ public class ApplicationMain extends javafx.application.Application {
             System.err.println(ex.getMessage());
         }
     }
-
     /**
      * Returns the Users database.
      */
