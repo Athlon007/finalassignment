@@ -21,17 +21,15 @@ public class Library implements Loadable<LibraryItem> {
 
     private String databaseFile = "library.db";
 
-    private Database database;
+    private Database<LibraryItem> database = new Database<>();
 
     private List<LibraryItem> list;
 
-    public Library(Database database) {
-        this.database = database;
+    public Library() {
         load(database.read(databaseFile));
     }
 
-    public Library(Database database, String databaseFile) {
-        this.database = database;
+    public Library(String databaseFile) {
         this.databaseFile = databaseFile;
         load(database.read(databaseFile));
     }

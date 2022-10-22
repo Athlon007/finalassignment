@@ -1,4 +1,3 @@
-import nl.inholland.konradfigura.finalassignment.dataaccess.Database;
 import nl.inholland.konradfigura.finalassignment.logic.Library;
 import nl.inholland.konradfigura.finalassignment.logic.Members;
 import nl.inholland.konradfigura.finalassignment.logic.Users;
@@ -38,10 +37,9 @@ class TestDatabase {
             memFile.delete();
         }
 
-        Database db = new Database();
-        dbLibrary = new Library(db, LIBRARY_TEST_FILE);
-        dbMembers = new Members(db, MEMBER_TEST_FILE);
-        dbUsers = new Users(db, USER_TEST_FILE);
+        dbLibrary = new Library(LIBRARY_TEST_FILE);
+        dbMembers = new Members(MEMBER_TEST_FILE);
+        dbUsers = new Users(USER_TEST_FILE);
     }
     @Test
     void testOvertimeBookReturn() {

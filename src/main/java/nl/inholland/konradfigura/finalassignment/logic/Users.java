@@ -13,16 +13,14 @@ public class Users implements Loadable<User> {
     private List<User> list;
 
     private String databaseFile = "users.db";
-    private Database database;
+    private Database<User> database = new Database<>();
 
 
-    public Users(Database database) {
-        this.database = database;
+    public Users() {
         load(database.read(databaseFile));
     }
 
-    public Users(Database database, String databaseFile) {
-        this.database = database;
+    public Users(String databaseFile) {
         this.databaseFile = databaseFile;
         load(database.read(databaseFile));
     }

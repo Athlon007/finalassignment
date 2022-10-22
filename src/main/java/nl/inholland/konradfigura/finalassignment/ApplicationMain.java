@@ -31,9 +31,9 @@ public class ApplicationMain extends javafx.application.Application {
         Database database = new Database();
 
         loadables = new Loadable[] {
-            new Users(database),
-            new Members(database),
-            new Library(database)
+            new Users(),
+            new Members(),
+            new Library()
         };
 
         try {

@@ -1,6 +1,7 @@
 package nl.inholland.konradfigura.finalassignment.logic;
 
 import nl.inholland.konradfigura.finalassignment.dataaccess.Database;
+import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
 import nl.inholland.konradfigura.finalassignment.model.Loadable;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.Member;
@@ -15,15 +16,13 @@ public class Members implements Loadable<Member> {
 
     private String databaseFile = "members.db";
 
-    private Database database;
+    private Database<Member> database = new Database<>();
 
-    public Members(Database database) {
-        this.database = database;
+    public Members() {
         load(database.read(databaseFile));
     }
 
-    public Members(Database database, String databaseFile) {
-        this.database = database;
+    public Members(String databaseFile) {
         this.databaseFile = databaseFile;
         load(database.read(databaseFile));
     }
