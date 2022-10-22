@@ -7,7 +7,6 @@ import javafx.scene.control.Alert;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import nl.inholland.konradfigura.finalassignment.dataaccess.Database;
 import nl.inholland.konradfigura.finalassignment.logic.Library;
 import nl.inholland.konradfigura.finalassignment.logic.Members;
 import nl.inholland.konradfigura.finalassignment.logic.Users;
@@ -27,8 +26,6 @@ public class ApplicationMain extends javafx.application.Application {
     public void start(Stage stage) {
         ApplicationMain.stage = stage;
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this::onCloseHandler);
-
-        Database database = new Database();
 
         loadables = new Loadable[] {
             new Users(),
@@ -73,6 +70,7 @@ public class ApplicationMain extends javafx.application.Application {
             loadable.save();
         }
     }
+
     /**
      * Returns the Users database.
      */
