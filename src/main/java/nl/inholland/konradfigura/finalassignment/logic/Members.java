@@ -78,7 +78,6 @@ public class Members implements Loadable<Member> {
     }
 
     private boolean isInputValid(StringBuilder sb, String firstname, String lastname, LocalDate birthdate) {
-        String errors = "";
         if (firstname.isEmpty()) {
             sb.append("First name missing\n");
         }
