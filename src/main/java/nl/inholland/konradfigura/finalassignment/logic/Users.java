@@ -2,9 +2,9 @@ package nl.inholland.konradfigura.finalassignment.logic;
 
 import nl.inholland.konradfigura.finalassignment.dataaccess.Database;
 import nl.inholland.konradfigura.finalassignment.model.Loadable;
+import nl.inholland.konradfigura.finalassignment.model.User;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.UserAlreadyExists;
-import nl.inholland.konradfigura.finalassignment.model.User;
 
 import java.io.IOException;
 import java.util.List;
@@ -62,16 +62,12 @@ public class Users implements Loadable<User> {
         System.out.printf("A dummy account has been added.%nLogin: %s%nPassword: %s%n", user2.getUsername(), user2.getPassword());
     }
 
-    public void add(User member) {
-        list.add(member);
-    }
-
     public void add(String username, String password) throws IllegalArgumentException, UserAlreadyExists {
         if (existsUser(username)) {
             throw new UserAlreadyExists("Username with nickname " + username + " already exists.");
         }
         User user = new User(generateId(), username, password);
-        add(user);
+        list.add(user);
     }
 
     private boolean existsUser(String username) {
@@ -109,14 +105,5 @@ public class Users implements Loadable<User> {
         }
 
         return highestId + 1;
-    }
-
-    public User getById(int id) {
-        for (User user : list) {
-            if (user.getId() == id) {
-                return user;
-            }
-        }
-        return null;
     }
 }

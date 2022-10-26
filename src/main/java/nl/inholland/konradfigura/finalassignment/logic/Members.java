@@ -1,7 +1,6 @@
 package nl.inholland.konradfigura.finalassignment.logic;
 
 import nl.inholland.konradfigura.finalassignment.dataaccess.Database;
-import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
 import nl.inholland.konradfigura.finalassignment.model.Loadable;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.Member;
@@ -45,15 +44,14 @@ public class Members implements Loadable<Member> {
         return list;
     }
 
-    public void add(Member member) {
-        list.add(member);
-    }
-
     public void add(String firstname, String lastname, LocalDate birthdate) throws IllegalArgumentException {
-        isInputValid(firstname, lastname, birthdate);
+        StringBuilder sb = new StringBuilder();
+        if (!isInputValid(sb, firstname, lastname, birthdate)) {
+            throw new IllegalArgumentException(sb.toString());
+        }
 
         Member member = new Member(generateId(), firstname, lastname, birthdate);
-        add(member);
+        list.add(member);
     }
 
     public void delete(Member member) throws MemberNotFoundException {
@@ -65,7 +63,10 @@ public class Members implements Loadable<Member> {
 
     public void editUser(Member editingMember, String firstname, String lastname, LocalDate birthdate)
             throws MemberNotFoundException {
-        isInputValid(firstname, lastname, birthdate);
+        StringBuilder sb = new StringBuilder();
+        if (!isInputValid(sb, firstname, lastname, birthdate)) {
+            throw new IllegalArgumentException(sb.toString());
+        }
 
         if (!list.contains(editingMember)) {
             throw new MemberNotFoundException(String.format("User '%s %s' was not found.", firstname, lastname));
@@ -76,20 +77,19 @@ public class Members implements Loadable<Member> {
         editingMember.setBirthdate(birthdate);
     }
 
-    private void isInputValid(String firstname, String lastname, LocalDate birthdate) {
+    private boolean isInputValid(StringBuilder sb, String firstname, String lastname, LocalDate birthdate) {
         String errors = "";
         if (firstname.isEmpty()) {
-            errors += "First name missing\n";
+            sb.append("First name missing\n");
         }
         if (lastname.isEmpty()) {
-            errors += "Last name missing\n";
+            sb.append("Last name missing\n");
         }
         if (birthdate == null) {
-            errors += "Birth date missing\n";
+            sb.append("Birth date missing\n");
         }
-        if (errors.length() > 0) {
-            throw new IllegalArgumentException(errors);
-        }
+
+        return sb.length() == 0;
     }
 
     protected int generateId() {

@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import nl.inholland.konradfigura.finalassignment.ApplicationMain;
+import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotBorrowedException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
@@ -354,7 +355,7 @@ public class DashboardController implements Initializable {
             setLabelGreen(lblReceiveError);
             lblReceiveError.setText("Book has been returned!");
             txtReceiveCode.setText("");
-        } catch (BookNotFoundException ex) {
+        } catch (BookNotFoundException | BookNotBorrowedException ex) {
             lblReceiveError.setText(ex.getMessage());
         } catch (OvertimeException ex) {
             lblReceiveError.setText(ex.getMessage());

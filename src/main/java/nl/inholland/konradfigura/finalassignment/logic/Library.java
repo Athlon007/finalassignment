@@ -5,14 +5,11 @@ import nl.inholland.konradfigura.finalassignment.model.LendInfo;
 import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
 import nl.inholland.konradfigura.finalassignment.model.Loadable;
 import nl.inholland.konradfigura.finalassignment.model.Member;
-import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotAvailableException;
-import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundException;
-import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
-import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
+import nl.inholland.konradfigura.finalassignment.model.exceptions.*;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,20 +49,14 @@ public class Library implements Loadable<LibraryItem> {
         return list;
     }
 
-    public void add(String title, String author) throws NullPointerException {
-        if (title.isEmpty()) {
-            throw new NullPointerException("Title is empty.");
-        }
-        if (author.isEmpty()) {
-            throw new NullPointerException("Author is empty.");
+    public void add(String title, String author) throws IllegalArgumentException {
+        StringBuilder sb = new StringBuilder();
+        if (!isInputValid(sb, title, author)) {
+            throw new IllegalArgumentException(sb.toString());
         }
 
         LibraryItem item = new LibraryItem(generateId(), title, author);
-        add(item);
-    }
-
-    public void add(LibraryItem obj) {
-        list.add(obj);
+        list.add(item);
     }
 
     public void delete(LibraryItem obj) throws BookNotFoundException {
@@ -105,7 +96,6 @@ public class Library implements Loadable<LibraryItem> {
 
     public void lendBook(LibraryItem book, Member member, LocalDate date)
             throws BookNotFoundException, MemberNotFoundException, BookNotAvailableException {
-
         if (!list.contains(book)) {
             throw new BookNotFoundException("Book is not registered in the database.");
         }
@@ -121,7 +111,7 @@ public class Library implements Loadable<LibraryItem> {
         book.lend(member, date);
     }
 
-    public void returnBook(LibraryItem book) throws BookNotFoundException, OvertimeException, NullPointerException {
+    public void returnBook(LibraryItem book) throws BookNotFoundException, OvertimeException, BookNotBorrowedException {
         if (!list.contains(book)) {
             throw new BookNotFoundException("Book is not registered in the database.");
         }
@@ -129,23 +119,19 @@ public class Library implements Loadable<LibraryItem> {
         final LendInfo info = book.returnItem();
 
         if (info == null) {
-            throw new NullPointerException("Item is not borrowed.");
+            throw new BookNotBorrowedException("Item is not borrowed.");
         }
 
-        final LocalDate lendDatePlusOvertime = info.date().plusDays(OVERTIME_DAYS);
-        if (LocalDate.now().isAfter(lendDatePlusOvertime)) {
-            long days = Duration.between(lendDatePlusOvertime.atStartOfDay(), LocalDate.now().atStartOfDay()).toDays();
-            throw new OvertimeException(String.format("Book was returned %d days overtime.", days));
+        final long overdueDays = ChronoUnit.DAYS.between(info.date(), LocalDate.now());
+        if (overdueDays > OVERTIME_DAYS) {
+            throw new OvertimeException(String.format("Book was returned %d days overtime.", overdueDays));
         }
     }
 
     public void edit(LibraryItem book, String title, String author) throws IllegalArgumentException, BookNotFoundException, BookNotAvailableException {
-        if (title.isEmpty()) {
-            throw new IllegalArgumentException("Title is empty.");
-        }
-
-        if (author.isEmpty()) {
-            throw new IllegalArgumentException("Author is empty.");
+        StringBuilder sb = new StringBuilder();
+        if (!isInputValid(sb, title, author)) {
+            throw new IllegalArgumentException(sb.toString());
         }
 
         if (!list.contains(book)) {
@@ -179,5 +165,17 @@ public class Library implements Loadable<LibraryItem> {
         }
 
         return false;
+    }
+
+    private boolean isInputValid(StringBuilder sb, String title, String author) {
+        if (title.isEmpty()) {
+            sb.append("Title is empty.\n");
+        }
+
+        if (author.isEmpty()) {
+            sb.append("Author is empty.\n");
+        }
+
+        return sb.length() == 0;
     }
 }
