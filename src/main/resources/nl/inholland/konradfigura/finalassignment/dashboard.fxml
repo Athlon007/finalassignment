@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
+<?import nl.inholland.konradfigura.finalassignment.ui.customcontrols.DigitOnlyTextField?>
 <AnchorPane minHeight="494.0" minWidth="1118.0" prefHeight="574.0" prefWidth="583.0" styleClass="body-dashboard" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TabPane fx:id="tabContainer" layoutX="-1.0" layoutY="30.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="647.0" prefWidth="1118.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
@@ -151,14 +152,14 @@
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                  <children>
                                     <Label fx:id="lblLendError" layoutX="14.0" layoutY="134.0" styleClass="error-label" />
-                                    <TextField fx:id="txtLendItemCode" layoutX="15.0" layoutY="14.0" prefHeight="30.0" prefWidth="455.0" promptText="Item code" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                                    <TextField fx:id="txtLendMemberId" layoutX="15.0" layoutY="54.0" prefHeight="30.0" prefWidth="455.0" promptText="Member identifier" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                                    <DigitOnlyTextField fx:id="txtLendItemCode" layoutX="15.0" layoutY="14.0" prefHeight="30.0" prefWidth="455.0" promptText="Item code" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                                    <DigitOnlyTextField fx:id="txtLendMemberId" layoutX="15.0" layoutY="54.0" prefHeight="30.0" prefWidth="455.0" promptText="Member identifier" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                                     <Button layoutX="14.0" layoutY="96.0" mnemonicParsing="false" onAction="#onLendClick" prefWidth="125.0" text="Lend item" />
                                  </children>
                               </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                  <children>
-                                    <TextField fx:id="txtReceiveCode" layoutX="15.0" layoutY="14.0" prefHeight="30.0" prefWidth="455.0" promptText="Item code" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="14.0" />
+                                    <DigitOnlyTextField fx:id="txtReceiveCode" layoutX="15.0" layoutY="14.0" prefHeight="30.0" prefWidth="455.0" promptText="Item code" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="14.0" />
                                     <Button layoutX="14.0" layoutY="56.0" mnemonicParsing="false" onAction="#onReceiveClick" prefWidth="125.0" text="Receive item" />
                                     <Label fx:id="lblReceiveError" layoutX="14.0" layoutY="94.0" styleClass="error-label" />
                                  </children></AnchorPane>

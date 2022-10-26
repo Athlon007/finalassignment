@@ -157,7 +157,7 @@ public class Library implements Loadable<LibraryItem> {
         return result;
     }
 
-    public boolean isMemberBorrowingBook(Member member) throws NullPointerException {
+    public boolean isMemberBorrowingBook(Member member) {
         for (LibraryItem li : list) {
             if (li.getLendingUser() != null && li.getLendingUser().equals(member)) {
                 return true;

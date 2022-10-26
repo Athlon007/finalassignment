@@ -95,11 +95,6 @@ public class DashboardController implements Initializable {
         // Set table columns Items
         tblItemsAvailable.setCellValueFactory(s -> new SimpleStringProperty(s.getValue().isAvailable() ? "Yes" : "No"));
 
-        // Prevent text boxes that cannot accept digits... to not accept digits.
-        txtLendItemCode.textProperty().addListener(new OnlyDigitsTextFieldListener(txtLendItemCode));
-        txtLendMemberId.textProperty().addListener(new OnlyDigitsTextFieldListener(txtLendMemberId));
-        txtReceiveCode.textProperty().addListener(new OnlyDigitsTextFieldListener(txtReceiveCode));
-
         // Search fields.
         initSearchBars();
     }
@@ -360,8 +355,6 @@ public class DashboardController implements Initializable {
         } catch (OvertimeException ex) {
             lblReceiveError.setText(ex.getMessage());
             txtReceiveCode.setText("");
-        } catch (NullPointerException ex) {
-            lblReceiveError.setText("Book is not borrowed.");
         }
     }
 
