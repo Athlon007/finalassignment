@@ -15,12 +15,12 @@ import nl.inholland.konradfigura.finalassignment.ui.LoginController;
 
 import java.awt.*;
 import java.io.IOException;
+import java.io.Serializable;
 
 public class ApplicationMain extends javafx.application.Application {
     private static Stage stage;
 
     private static Loadable[] loadables;
-
 
     @Override
     public void start(Stage stage) {
@@ -66,7 +66,7 @@ public class ApplicationMain extends javafx.application.Application {
     }
 
     private void onCloseHandler(WindowEvent event) {
-        for (Loadable loadable : loadables) {
+        for (Loadable<? extends Serializable> loadable : loadables) {
             loadable.save();
         }
     }
@@ -91,7 +91,7 @@ public class ApplicationMain extends javafx.application.Application {
      */
     private static Screen getActiveScreen() {
         Point mousePosition = MouseInfo.getPointerInfo().getLocation();
-        Screen current = Screen.getPrimary();
+        Screen current = null;
         for (Screen screen : Screen.getScreens()) {
             if (mousePosition.getX() > screen.getVisualBounds().getMinX()
                     && mousePosition.getX() < screen.getVisualBounds().getMaxX()
@@ -100,6 +100,6 @@ public class ApplicationMain extends javafx.application.Application {
                 current = screen;
             }
         }
-        return current;
+        return current != null ? current : Screen.getPrimary();
     }
 }
