@@ -120,6 +120,7 @@
                         <Button layoutX="54.0" layoutY="437.0" mnemonicParsing="false" onAction="#onAddItemOpenMenuClick" text="Add Item" AnchorPane.bottomAnchor="34.5" AnchorPane.leftAnchor="54.0" />
                         <Button layoutX="179.0" layoutY="437.0" mnemonicParsing="false" onAction="#onEditItemClick" styleClass="button-secondary" text="Edit Item" AnchorPane.bottomAnchor="34.5" AnchorPane.leftAnchor="179.0" />
                         <Button layoutX="304.0" layoutY="437.0" mnemonicParsing="false" onAction="#onDeleteItemClick" styleClass="button-important" text="Delete Item" AnchorPane.bottomAnchor="34.5" AnchorPane.leftAnchor="304.0" />
+                        <Button layoutX="429.0" layoutY="437.0" mnemonicParsing="false" onAction="#onImportItemsClick" text="Import items" />
                         <AnchorPane fx:id="paneAddItem" layoutX="54.0" prefHeight="482.0" prefWidth="1010.0" style="-fx-background-color: #c9c9c9;" visible="false" AnchorPane.bottomAnchor="14.5" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="53.0" AnchorPane.topAnchor="1.0">
                            <children>
                               <Label fx:id="lblWelcome1111" prefHeight="53.0" prefWidth="391.0" styleClass="header-category" text="Add item" textFill="WHITE">
@@ -139,8 +140,7 @@
                            </children>
                         </AnchorPane>
                         <TextField fx:id="txtItemSearch" layoutX="757.0" layoutY="12.0" prefHeight="30.0" prefWidth="307.0" promptText="Search" AnchorPane.rightAnchor="54.0" />
-                        <Label fx:id="lblCollectionError" layoutX="557.0" layoutY="442.0" prefHeight="17.0" prefWidth="268.0" styleClass="error-label" />
-                        <Button layoutX="429.0" layoutY="437.0" mnemonicParsing="false" onAction="#onImportItemsClick" text="Import items" />
+                        <Label fx:id="lblCollectionError" layoutX="557.0" layoutY="442.0" prefHeight="17.0" prefWidth="505.0" styleClass="error-label" />
                      </children>
                   </AnchorPane>
             </content>
