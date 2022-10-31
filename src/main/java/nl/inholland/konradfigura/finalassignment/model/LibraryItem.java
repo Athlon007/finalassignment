@@ -53,10 +53,14 @@ public class LibraryItem implements Serializable {
         return info;
     }
 
+    public LendInfo getLendInfo() {
+        return lendInfo;
+    }
+
     public Member getLendingUser() throws NullPointerException {
         if (lendInfo == null) {
             return null;
         }
-        return lendInfo.lender();
+        return lendInfo.getLender();
     }
 }

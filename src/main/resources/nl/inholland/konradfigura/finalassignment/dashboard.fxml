@@ -14,8 +14,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
 <?import nl.inholland.konradfigura.finalassignment.ui.customcontrols.DigitOnlyTextField?>
+
 <AnchorPane minHeight="494.0" minWidth="1118.0" prefHeight="574.0" prefWidth="583.0" styleClass="body-dashboard" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TabPane fx:id="tabContainer" layoutX="-1.0" layoutY="30.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="647.0" prefWidth="1118.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
@@ -160,8 +160,10 @@
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                  <children>
                                     <DigitOnlyTextField fx:id="txtReceiveCode" layoutX="15.0" layoutY="14.0" prefHeight="30.0" prefWidth="455.0" promptText="Item code" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="14.0" />
-                                    <Button layoutX="14.0" layoutY="56.0" mnemonicParsing="false" onAction="#onReceiveClick" prefWidth="125.0" text="Receive item" />
-                                    <Label fx:id="lblReceiveError" layoutX="14.0" layoutY="94.0" styleClass="error-label" />
+                                    <Button fx:id="btnReceive" layoutX="14.0" layoutY="56.0" mnemonicParsing="false" onAction="#onReceiveClick" prefWidth="125.0" text="Receive item" />
+                                    <Label fx:id="lblReceiveError" layoutX="14.0" layoutY="94.0" styleClass="error-label" text="LABEL_RECEIVE" />
+                                    <Button fx:id="btnPayFine" layoutX="14.0" layoutY="134.0" mnemonicParsing="false" onAction="#onPayFineClick" prefWidth="125.0" text="Pay fine" />
+                                    <Label fx:id="lblReceiveSuccess" layoutX="149.0" layoutY="61.0" text="Book has been returned!" textFill="#00bc10" />
                                  </children></AnchorPane>
                           </items>
                         </SplitPane>

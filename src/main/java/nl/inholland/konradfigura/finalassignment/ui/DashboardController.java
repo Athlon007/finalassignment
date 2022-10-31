@@ -7,13 +7,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import nl.inholland.konradfigura.finalassignment.ApplicationMain;
+import nl.inholland.konradfigura.finalassignment.model.*;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotBorrowedException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
-import nl.inholland.konradfigura.finalassignment.model.LibraryItem;
-import nl.inholland.konradfigura.finalassignment.model.Member;
-import nl.inholland.konradfigura.finalassignment.model.User;
 
 import java.io.IOException;
 import java.net.URL;
@@ -61,7 +59,8 @@ public class DashboardController implements Initializable {
     private Label lblErrorAddItem;
     @FXML
     private TextField txtItemSearch;
-
+    @FXML
+    private Label lblReceiveSuccess;
     // LENDING/RECEIVING
     @FXML
     private TextField txtLendItemCode;
@@ -77,6 +76,10 @@ public class DashboardController implements Initializable {
     private Label lblMembersError;
     @FXML
     private Label lblCollectionError;
+    @FXML
+    private Button btnReceive;
+    @FXML
+    private Button btnPayFine;
 
     // VARIABLES.
     private static final String GOOD_LABEL_CLASS = "good-label";
@@ -97,6 +100,37 @@ public class DashboardController implements Initializable {
 
         // Search fields.
         initSearchBars();
+
+
+        resetReceiveControls();
+        lblReceiveSuccess.setVisible(false);
+        txtReceiveCode.textProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (newValue.length() == 0) {
+                resetReceiveControls();
+                return;
+            }
+            
+            int bookCode = Integer.parseInt(newValue);
+            
+            if (!ApplicationMain.getLibrary().doesBookExist(bookCode) || !ApplicationMain.getLibrary().isBookBorrowed(bookCode)) {
+                resetReceiveControls();
+                return;
+            }
+
+            OverdueResponse response = ApplicationMain.getLibrary().isBookOverdue(bookCode);
+            if (response.isOverdue()) {
+                lblReceiveError.setText(String.format("Item is late by: %d days\nTotal fine: € %.2f", response.overdueDays(), response.fine()));
+                btnPayFine.setDisable(false);
+            } else {
+                btnReceive.setDisable(false);
+            }
+        }));
+    }
+
+    private void resetReceiveControls() {
+        lblReceiveError.setText("");
+        btnReceive.setDisable(true);
+        btnPayFine.setDisable(true);
     }
 
     public void loadUser(User user) {
@@ -142,6 +176,8 @@ public class DashboardController implements Initializable {
                         case "tabLending":
                             lblLendError.setText("");
                             lblReceiveError.setText("");
+                            resetReceiveControls();
+                            lblReceiveSuccess.setVisible(false);
                             break;
                         default: break;
                     }
@@ -348,8 +384,8 @@ public class DashboardController implements Initializable {
             ApplicationMain.getLibrary().returnBook(item);
 
             setLabelGreen(lblReceiveError);
-            lblReceiveError.setText("Book has been returned!");
-            txtReceiveCode.setText("");
+            resetReceiveControls();
+            lblReceiveSuccess.setVisible(true);
         } catch (BookNotFoundException | BookNotBorrowedException ex) {
             lblReceiveError.setText(ex.getMessage());
         } catch (OvertimeException ex) {
@@ -418,6 +454,14 @@ public class DashboardController implements Initializable {
         } catch (IOException e) {
             System.err.println("Unable to logout (what?!)");
         }
+    }
+
+    @FXML
+    private void onPayFineClick() {
+        ApplicationMain.getLibrary().payFine(Integer.parseInt(txtReceiveCode.getText()));
+        btnPayFine.setDisable(true);
+        btnReceive.setDisable(false);
+        lblReceiveError.setText("");
     }
 }
 
