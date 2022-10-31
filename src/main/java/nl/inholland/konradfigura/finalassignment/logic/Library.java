@@ -16,7 +16,7 @@ public class Library implements Loadable<LibraryItem> {
 
     private String databaseFile = "library.db";
 
-    private Database<LibraryItem> database = new Database<>();
+    private final Database<LibraryItem> database = new Database<>();
 
     private List<LibraryItem> list;
 
@@ -47,7 +47,7 @@ public class Library implements Loadable<LibraryItem> {
         return list;
     }
 
-    public void add(String title, String author) {
+    public void add(String title, String author) throws IllegalArgumentException {
         add(generateId(), title, author);
     }
 
@@ -187,31 +187,24 @@ public class Library implements Loadable<LibraryItem> {
     }
 
     public boolean doesBookExist(int bookCode) {
-        for (LibraryItem book : list) {
-            if (book.getId() == bookCode) {
-                return true;
-            }
-        }
-
-        return false;
+        return getById(bookCode) != null;
     }
 
     private long getTimeSinceBorrow(LendInfo info) {
         return ChronoUnit.DAYS.between(info.getDate(), LocalDate.now());
     }
 
-    public OverdueResponse isBookOverdue(int bookCode) {
-        for (LibraryItem book : list) {
-            if (book.getId() == bookCode) {
-                LendInfo info = book.getLendInfo();
-                final long borrowDays = getTimeSinceBorrow(info);
-                if (borrowDays > OVERTIME_DAYS && !info.isPaidOverdue()) {
-                    return new OverdueResponse(true, borrowDays - OVERTIME_DAYS, calculateFineForBookReturn(info));
-                } else {
-                    return new OverdueResponse(false, 0, 0);
-                }
-            }
+    public OverdueResponse isBookOverdue(int bookCode) throws BookNotFoundException {
+        LibraryItem book = getById(bookCode);
+        if (book == null) {
+            throw new BookNotFoundException("Unable to find the book with such ID.");
         }
+        LendInfo info = book.getLendInfo();
+        final long borrowDays = getTimeSinceBorrow(info);
+        if (borrowDays > OVERTIME_DAYS && !info.isPaidOverdue()) {
+            return new OverdueResponse(true, borrowDays - OVERTIME_DAYS, calculateFineForBookReturn(info));
+        }
+
         return new OverdueResponse(false, 0, 0);
     }
 
@@ -229,7 +222,7 @@ public class Library implements Loadable<LibraryItem> {
         return !item.isAvailable();
     }
 
-    public void importFromFile(File file) throws IOException {
+    public void importFromFile(File file) throws IOException, NumberFormatException {
         try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
             String line;
             int counter = -1;

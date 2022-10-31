@@ -128,12 +128,18 @@ public class DashboardController implements Initializable {
                 return;
             }
 
-            OverdueResponse response = ApplicationMain.getLibrary().isBookOverdue(bookCode);
-            if (response.isOverdue()) {
-                lblReceiveError.setText(String.format("Item is late by: %d days%nTotal fine: € %.2f", response.overdueDays(), response.fine()));
-                btnPayFine.setDisable(false);
-            } else {
-                btnReceive.setDisable(false);
+            try {
+                OverdueResponse response = ApplicationMain.getLibrary().isBookOverdue(bookCode);
+                if (response.isOverdue()) {
+                    lblReceiveError.setText(String.format("Item is late by: %d days%nTotal fine: € %.2f", response.overdueDays(), response.fine()));
+                    btnPayFine.setDisable(false);
+                } else {
+                    btnReceive.setDisable(false);
+                }
+            } catch (BookNotFoundException ex) {
+                lblReceiveError.setText("Failed to get the book with such ID.");
+            } catch (Exception e) {
+                lblReceiveError.setText("Unhandled exception.");
             }
         }));
     }
@@ -487,6 +493,10 @@ public class DashboardController implements Initializable {
                 loadTableItems();
             } catch (IOException e) {
                 lblCollectionError.setText("Unable to read the library file");
+            } catch (NumberFormatException e) {
+                lblCollectionError.setText("Unable to read the library file. Number format exception.");
+            } catch (Exception e) {
+                lblCollectionError.setText("Unable to read the library file. Unknown exception.");
             }
         }
     }

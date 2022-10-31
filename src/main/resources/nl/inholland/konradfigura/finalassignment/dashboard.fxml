@@ -139,7 +139,7 @@
                            </children>
                         </AnchorPane>
                         <TextField fx:id="txtItemSearch" layoutX="757.0" layoutY="12.0" prefHeight="30.0" prefWidth="307.0" promptText="Search" AnchorPane.rightAnchor="54.0" />
-                        <Label fx:id="lblCollectionError" layoutX="557.0" layoutY="442.0" prefHeight="17.0" prefWidth="268.0" styleClass="error-label" />
+                        <Label fx:id="lblCollectionError" layoutX="557.0" layoutY="442.0" prefHeight="17.0" prefWidth="505.0" styleClass="error-label" />
                         <Button layoutX="429.0" layoutY="437.0" mnemonicParsing="false" onAction="#onImportItemsClick" text="Import items" />
                      </children>
                   </AnchorPane>
