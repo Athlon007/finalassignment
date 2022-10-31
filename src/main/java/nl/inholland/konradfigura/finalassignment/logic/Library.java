@@ -4,7 +4,7 @@ import nl.inholland.konradfigura.finalassignment.dataaccess.Database;
 import nl.inholland.konradfigura.finalassignment.model.*;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -47,13 +47,22 @@ public class Library implements Loadable<LibraryItem> {
         return list;
     }
 
-    public void add(String title, String author) throws IllegalArgumentException {
+    public void add(String title, String author) {
+        add(generateId(), title, author);
+    }
+
+    public void add(int code, String title, String author) throws IllegalArgumentException {
+        // Book with such ID already exists? Try to generate a valid one.
+        while (getById(code) != null) {
+            code++;
+        }
+
         StringBuilder sb = new StringBuilder();
         if (!isInputValid(sb, title, author)) {
             throw new IllegalArgumentException(sb.toString());
         }
 
-        LibraryItem item = new LibraryItem(generateId(), title, author);
+        LibraryItem item = new LibraryItem(code, title, author);
         list.add(item);
     }
 
@@ -106,8 +115,7 @@ public class Library implements Loadable<LibraryItem> {
             throw new BookNotAvailableException("Book is already borrowed.");
         }
 
-        book.lend(member, LocalDate.of(2022, 9, 1));
-        //book.lend(member, date);
+        book.lend(member, date);
     }
 
     public void returnBook(LibraryItem book) throws BookNotFoundException, OvertimeException, BookNotBorrowedException {
@@ -219,5 +227,21 @@ public class Library implements Loadable<LibraryItem> {
     public boolean isBookBorrowed(int bookCode) {
         LibraryItem item = getById(bookCode);
         return !item.isAvailable();
+    }
+
+    public void importFromFile(File file) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
+            String line;
+            int counter = -1;
+            while ((line = reader.readLine()) != null) {
+                counter++;
+                if (counter == 0) {
+                    continue;
+                }
+
+                String[] split = line.split(";");
+                add(Integer.parseInt(split[0]), split[1], split[2]);
+            }
+        }
     }
 }

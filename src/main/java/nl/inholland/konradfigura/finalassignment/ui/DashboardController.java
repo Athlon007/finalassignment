@@ -6,14 +6,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import nl.inholland.konradfigura.finalassignment.ApplicationMain;
-import nl.inholland.konradfigura.finalassignment.logic.Library;
 import nl.inholland.konradfigura.finalassignment.model.*;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotBorrowedException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.OvertimeException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.MemberNotFoundException;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -129,7 +130,7 @@ public class DashboardController implements Initializable {
 
             OverdueResponse response = ApplicationMain.getLibrary().isBookOverdue(bookCode);
             if (response.isOverdue()) {
-                lblReceiveError.setText(String.format("Item is late by: %d days\nTotal fine: € %.2f", response.overdueDays(), response.fine()));
+                lblReceiveError.setText(String.format("Item is late by: %d days%nTotal fine: € %.2f", response.overdueDays(), response.fine()));
                 btnPayFine.setDisable(false);
             } else {
                 btnReceive.setDisable(false);
@@ -472,6 +473,22 @@ public class DashboardController implements Initializable {
         btnPayFine.setDisable(true);
         btnReceive.setDisable(false);
         lblReceiveError.setText("");
+    }
+
+    @FXML
+    private void onImportItemsClick() {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Select items file.");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV", "*.csv"));
+        File file = chooser.showOpenDialog(null);
+        if (file != null) {
+            try {
+                ApplicationMain.getLibrary().importFromFile(file);
+                loadTableItems();
+            } catch (IOException e) {
+                lblCollectionError.setText("Unable to read the library file");
+            }
+        }
     }
 }
 
