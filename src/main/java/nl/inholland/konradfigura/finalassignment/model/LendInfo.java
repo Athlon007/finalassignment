@@ -1,7 +1,10 @@
 package nl.inholland.konradfigura.finalassignment.model;
 
+import nl.inholland.konradfigura.finalassignment.logic.Library;
+
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class LendInfo implements Serializable {
 
@@ -30,5 +33,9 @@ public class LendInfo implements Serializable {
 
     public void setIsPaidOverdue(boolean value) {
         isPaidOverdue = value;
+    }
+
+    public LocalDate getExpectedReturnTime() {
+        return ChronoUnit.DAYS.addTo(date, Library.OVERTIME_DAYS);
     }
 }

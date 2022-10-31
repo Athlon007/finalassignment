@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import nl.inholland.konradfigura.finalassignment.ApplicationMain;
+import nl.inholland.konradfigura.finalassignment.logic.Library;
 import nl.inholland.konradfigura.finalassignment.model.*;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotBorrowedException;
 import nl.inholland.konradfigura.finalassignment.model.exceptions.BookNotFoundException;
@@ -31,6 +32,9 @@ public class DashboardController implements Initializable {
     private TableColumn<LibraryItem, String> tblItemsAvailable;
     @FXML
     private TextField txtMemberSearch;
+
+    @FXML
+    private TableColumn<LibraryItem, String> tblItemsReturnDate;
 
     // ADD/EDIT MEMBER PANE
     @FXML
@@ -97,11 +101,17 @@ public class DashboardController implements Initializable {
 
         // Set table columns Items
         tblItemsAvailable.setCellValueFactory(s -> new SimpleStringProperty(s.getValue().isAvailable() ? "Yes" : "No"));
+        tblItemsReturnDate.setCellValueFactory(s -> new SimpleStringProperty(s.getValue().isAvailable()
+                ? "" : s.getValue().getLendInfo().getExpectedReturnTime().toString()));
 
         // Search fields.
         initSearchBars();
 
+        // Exam 1.
+        initReceiveControls();
+    }
 
+    private void initReceiveControls() {
         resetReceiveControls();
         lblReceiveSuccess.setVisible(false);
         txtReceiveCode.textProperty().addListener(((observableValue, oldValue, newValue) -> {
@@ -109,9 +119,9 @@ public class DashboardController implements Initializable {
                 resetReceiveControls();
                 return;
             }
-            
+
             int bookCode = Integer.parseInt(newValue);
-            
+
             if (!ApplicationMain.getLibrary().doesBookExist(bookCode) || !ApplicationMain.getLibrary().isBookBorrowed(bookCode)) {
                 resetReceiveControls();
                 return;
