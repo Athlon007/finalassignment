@@ -365,6 +365,8 @@ public class DashboardController implements Initializable {
             setLabelGreen(lblLendError);
             lblLendError.setText(String.format("Book %s [%d] has been borrowed to member %s",
                     book.getTitle(), book.getId(), member.getFirstName()));
+            txtLendItemCode.setText("");
+            txtLendMemberId.setText("");
         } catch (Exception ex) {
             lblLendError.setText(ex.getMessage());
         }
@@ -403,6 +405,7 @@ public class DashboardController implements Initializable {
             setLabelGreen(lblReceiveError);
             resetReceiveControls();
             lblReceiveSuccess.setVisible(true);
+            txtReceiveCode.setText("");
         } catch (BookNotFoundException | BookNotBorrowedException ex) {
             lblReceiveError.setText(ex.getMessage());
         } catch (OvertimeException ex) {
